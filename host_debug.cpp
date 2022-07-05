@@ -805,7 +805,7 @@ int main(int argc, char** argv) {
 		std::cout << "has entered while" << std::endl;
 			if (line[0] != '%') {
 				std::cout << "has entered if, start to sscanf" << std::endl;
-				sscanf(line, "%d %d %d", row_size, col_size, nnz);
+				sscanf(line, "%u %u %u", &row_size, &col_size, &nnz);
                 //std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
                 std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
                 std::cout << "read_mtx_spmm: check point 3" << std::endl;
