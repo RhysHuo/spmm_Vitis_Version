@@ -800,8 +800,11 @@ int main(int argc, char** argv) {
 	if (fp_input != NULL) {
         std::cout << "read_mtx_spmm: check point 2" << std::endl;
 		char line[1000];
+	std::cout << "has defined a char line[1000]" << std::endl;
         while (fgets(line, sizeof(line), fp_input) != NULL) {
+		std::cout << "has entered while" << std::endl;
 			if (line[0] != '%') {
+				std::cout << "has entered if, start to sscanf" << std::endl;
 				sscanf(line, "%d %d %d", row_size, col_size, nnz);
                 //std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
                 std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
