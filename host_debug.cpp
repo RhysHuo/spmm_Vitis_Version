@@ -789,9 +789,9 @@ int main(int argc, char** argv) {
 	u32 c;
 	DATA_TYPE v;
 
-    DATA_TYPE *array_values;
-    u32* array_colIndices;
-    u32* array_rowPtr;
+    DATA_TYPE *array_values = new DATA_TYPE[nnz];
+    u32* array_colIndices = new u32[nnz];
+    u32* array_rowPtr = new u32[row_size + 1];
 
     u32 row_size;
     u32 col_size;
@@ -813,15 +813,16 @@ int main(int argc, char** argv) {
 				u32 line_number = 0;
                 while (fgets(line, sizeof(line), fp_input) != NULL) {
 					if (line_number < nnz) {
-
+						std::cout << "has entered if, start to sscanf" << std::endl;
 						sscanf(line, "%d %d", &c, &v);
 
 						//printf("colindices %d val %f\n", c, v);
 						//std::cout << "colindices" << c << " val " << v << std::endl;
 
 						*(array_colIndices + line_number) = c;
-
+						std::cout << "array_colIndices = " << *array_colIndices << std::endl;
 						*(array_values + line_number) = v;
+						std::cout << "array_values = " << *array_values << std::endl;
 						std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 					}
