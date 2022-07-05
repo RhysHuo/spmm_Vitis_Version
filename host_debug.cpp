@@ -390,7 +390,7 @@ int main(int argc, char** argv) {
 
 				u32 line_number = 0;
                 while (fgets(line, sizeof(line), fp_input) != NULL) {
-					if (line_number < *nnz) {
+					if (line_number < nnz) {
 
 						sscanf(line, "%d %d", &c, &v);
 
