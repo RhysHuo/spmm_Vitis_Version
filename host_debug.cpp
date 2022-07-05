@@ -9,7 +9,7 @@
 #include <CL/cl.h>
 #include <CL/cl2.hpp>
 #include "math.h"
-#include <hls_stream.h>
+//#include <hls_stream.h>
 #include "spmm_block.h"
 
 #define OCL_CHECK(error, call)                                                                   \
@@ -38,19 +38,25 @@ void spmm_kernel(
 
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
-
+	
+	/*
 	hls::stream<DATA_TYPE>       values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
 	hls::stream<u32>             col_indices_fifo;
 	#pragma HLS STREAM variable=col_indices_fifo depth=4 dim=1
 	hls::stream<DATA_TYPE_OUT>       y_fifo;
 	#pragma HLS STREAM variable=y_fifo depth=4 dim=1
-
+	*/
+	DATA_TYPE *values_fifo = values;
+	u32 *col_indices_fifo = columnIndex;
+	DATA_TYPE_OUT y_fifo;
+	/*
 	for (u32 i = 0; i < nnz; i+=1) {
 		#pragma HLS pipeline
 		values_fifo << values[i];
 		col_indices_fifo << columnIndex[i];
 	}
+	*/
 
 	u32 row_size_remains = 0;
 
@@ -70,8 +76,8 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				DATA_TYPE v = values_fifo.read();
-				u32 ci = col_indices_fifo.read();
+				DATA_TYPE v = *values_fifo;
+				u32 ci = *col_indices_fifo;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
@@ -113,10 +119,14 @@ void spmm_kernel(
 		y_tmp += y_local;
 		row_size_tmp -= II;
 		//std::cout << "y_tmp  " << y_tmp << std::endl;
-
+		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
 
+		}
+		*/
+		if (row_size_tmp == 0) {
+			y_fifo == y_tmp;
 		}
 	}
 
