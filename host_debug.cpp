@@ -176,7 +176,7 @@ void spmm(
 		u32 begin,
 		u32 end,
 
-		u32 first_rowPrt_value
+		//u32 first_rowPrt_value
 
 		) {
 	#pragma HLS DATAFLOW
@@ -228,8 +228,8 @@ void spmm(
 		u32 nrs = 0;
 		u32 new_nnz = 0;
 		u32 j = 0;
-		u32 prev_index = first_rowPrt_value; //前一个rowPtr
-		
+		u32 prev_index = rowPtr[0]; //前一个rowPtr
+		std::cout << "rowPtr[0] = " << rowPtr[0] << std::endl;
 		std::cout << "prev_index = " << prev_index << std::endl;
 		
 		u32 k = 0;
@@ -448,7 +448,7 @@ void spmm_block(
 
     //#pragma SDS resource(1)
     	std::cout << "Entering spmm" << std::endl;
-	std::cout << "rowPtr[begin] = " << rowPtr[begin] << std::endl;
+	//std::cout << "rowPtr[begin] = " << rowPtr[begin] << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
@@ -477,7 +477,7 @@ void spmm_block(
 
 			begin,
 			end,
-			rowPtr[begin]
+			//rowPtr[begin]
 			);
 }
 
