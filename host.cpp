@@ -272,6 +272,12 @@ int main(int argc, char** argv) {
         //std::cout << "read_mtx_spmm: check point 2" << std::endl;
 		char line_1[1000];
 	//std::cout << "has defined a char line[1000]" << std::endl;
+		if(fgets(line_1, sizeof(line_1), fp_input) != NULL){
+			sscanf(line_1, "%u %u %u", &row_size, &col_size, &nnz);
+			std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
+		}
+		
+		/*
         	while (fgets(line_1, sizeof(line_1), fp_input) != NULL) {
 			//std::cout << "has entered while" << std::endl;
 			if (line_1[0] != '%') {
@@ -282,7 +288,8 @@ int main(int argc, char** argv) {
 				//std::cout << "read_mtx_spmm: check point 3" << std::endl;
 			}
 		}
-	}			
+		*/
+	}
 	else {
 		//perror(argv[1]); //print the error message on stderr.
 		std::cout << "Error with input file name" << std::endl;
@@ -353,10 +360,10 @@ int main(int argc, char** argv) {
 
 				//*(array_colIndices + line_number) = c;
 				array_colIndices[line_number] = c;
-				//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+				std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
 				//*(array_values + line_number) = v;
 				array_values[line_number] = v;
-				//std::cout << "array_values = " << array_values[line_number] << std::endl;
+				std::cout << "array_values = " << array_values[line_number] << std::endl;
 				//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 			}
@@ -367,7 +374,7 @@ int main(int argc, char** argv) {
 				//std::cout << "rowptr " << c << std::endl;
 				//*(array_rowPtr + (line_number - (nnz))) = r;
 				array_rowPtr[line_number - nnz] = r;
-				//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+				std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
 				//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 			}
 			line_number++;
