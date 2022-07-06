@@ -174,7 +174,7 @@ void spmm(
 		u32 nnz,
 
 		u32 begin,
-		u32 end,
+		u32 end
 
 		//u32 first_rowPrt_value
 
@@ -373,8 +373,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
-					values_0 + first_rowPrt_value + values_offset_threads[i],
+					columnIndex_0 + rowPtr[0] + values_offset_threads[i],
+					values_0 + rowPtr[0] + values_offset_threads[i],
 					y_0 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -388,8 +388,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_1 + first_rowPrt_value + values_offset_threads[i],
-					values_1 + first_rowPrt_value + values_offset_threads[i],
+					columnIndex_1 + rowPtr[0] + values_offset_threads[i],
+					values_1 + rowPtr[0] + values_offset_threads[i],
 					y_1 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -403,8 +403,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_2 + first_rowPrt_value + values_offset_threads[i],
-					values_2 + first_rowPrt_value + values_offset_threads[i],
+					columnIndex_2 + rowPtr[0] + values_offset_threads[i],
+					values_2 + rowPtr[0] + values_offset_threads[i],
 					y_2 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -418,8 +418,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_3 + first_rowPrt_value + values_offset_threads[i],
-					values_3 + first_rowPrt_value + values_offset_threads[i],
+					columnIndex_3 + rowPtr[0] + values_offset_threads[i],
+					values_3 + rowPtr[0] + values_offset_threads[i],
 					y_3 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -476,7 +476,7 @@ void spmm_block(
 			nnz,
 
 			begin,
-			end,
+			end
 			//rowPtr[begin]
 			);
 }
