@@ -459,7 +459,7 @@ int main(int argc, char** argv) {
 
     // Set the kernal argument
     int narg = 0;
-	OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
+    OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
     OCL_CHECK(err, err = krnl.setArg(narg++, array_colIndices));
     OCL_CHECK(err, err = krnl.setArg(narg++, array_rowPtr));
