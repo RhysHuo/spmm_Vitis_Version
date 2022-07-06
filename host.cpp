@@ -11,6 +11,8 @@
 #include "math.h"
 #include "spmm_block.h"
 
+//20220706 18:27 successful
+
 #define OCL_CHECK(error, call)                                                                   \
     call;                                                                                        \
     if (error != CL_SUCCESS) {                                                                   \
