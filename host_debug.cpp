@@ -60,6 +60,8 @@ void spmm_kernel(
 	*/
 
 	u32 row_size_remains = 0;
+	
+	std::cout << "new_nnz = " << new_nnz << std::endl;
 
 	for (u32 i = 0; i < new_nnz; i+=II) {
 		#pragma HLS pipeline
@@ -79,15 +81,20 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
+				std::cout << "spmm_kernel : check 03" << std::endl;
 				DATA_TYPE v = *values_fifo;
+				std::cout << "spmm_kernel : check 04" << std::endl;
 				u32 ci = *col_indices_fifo;
+				std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
-				 	std::cout << "spmm_kernel : check 03" << std::endl;
+				 	std::cout << "spmm_kernel : check 06" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
+							std::cout << "spmm_kernel : check 07" << std::endl;
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
+							std::cout << "spmm_kernel : check 08" << std::endl;
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
 							ap_int<8> C_val;
 							C_val = v_val*x_temp;
