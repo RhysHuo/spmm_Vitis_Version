@@ -12,6 +12,8 @@
 //#include <hls_stream.h>
 #include "spmm_block.h"
 
+//因为不能用hls_stream，所以数据计算不准确（不正确），成功版本请参考 host.cpp
+
 #define OCL_CHECK(error, call)                                                                   \
     call;                                                                                        \
     if (error != CL_SUCCESS) {                                                                   \
