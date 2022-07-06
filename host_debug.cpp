@@ -174,9 +174,9 @@ void spmm(
 		u32 nnz,
 
 		u32 begin,
-		u32 end
+		u32 end,
 
-		//u32 first_rowPrt_value
+		u32 first_rowPrt_value
 
 		) {
 	#pragma HLS DATAFLOW
@@ -373,8 +373,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_0 + rowPtr[0] + values_offset_threads[i],
-					values_0 + rowPtr[0] + values_offset_threads[i],
+					columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
+					values_0 + first_rowPrt_value + values_offset_threads[i],
 					y_0 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -388,8 +388,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_1 + rowPtr[0] + values_offset_threads[i],
-					values_1 + rowPtr[0] + values_offset_threads[i],
+					columnIndex_1 + first_rowPrt_value + values_offset_threads[i],
+					values_1 + first_rowPrt_value + values_offset_threads[i],
 					y_1 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -403,8 +403,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_2 + rowPtr[0] + values_offset_threads[i],
-					values_2 + rowPtr[0] + values_offset_threads[i],
+					columnIndex_2 + first_rowPrt_value + values_offset_threads[i],
+					values_2 + first_rowPrt_value + values_offset_threads[i],
 					y_2 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -418,8 +418,8 @@ void spmm(
 					ternary,
 					rowSizeNew_local_rs[i],
 					rowSizeNew_local_nrs[i],
-					columnIndex_3 + rowPtr[0] + values_offset_threads[i],
-					values_3 + rowPtr[0] + values_offset_threads[i],
+					columnIndex_3 + first_rowPrt_value + values_offset_threads[i],
+					values_3 + first_rowPrt_value + values_offset_threads[i],
 					y_3 + begin + nv*row_size + row_offset_threads[i],
 					x_local[i],
 					row_size_threads[i],
@@ -448,7 +448,9 @@ void spmm_block(
 
     //#pragma SDS resource(1)
     	std::cout << "Entering spmm" << std::endl;
-	//std::cout << "rowPtr[begin] = " << rowPtr[begin] << std::endl;
+	u32 first_rowPrt_value = rowPtr[begin];
+	std::cout << "begin = " << begin << std::endl;
+	std::cout << "first_rowPrt_value = " << first_rowPrt_value << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
@@ -476,8 +478,8 @@ void spmm_block(
 			nnz,
 
 			begin,
-			end
-			//rowPtr[begin]
+			end,
+			first_rowPrt_value
 			);
 }
 
@@ -841,6 +843,8 @@ int main(int argc, char** argv) {
 
 	//double start_time, end_time, execution_time;
 	std::cout << "Start to kernel : spmm_block " << std::endl;
+	
+	std::cout << "array_rowPtr[S_begin] = " << array_rowPtr[S_begin] << std::endl;
 
     spmm_block(
 		S_ternary,
