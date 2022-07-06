@@ -723,10 +723,10 @@ int main(int argc, char** argv) {
 	u32 r;
 	u32 c;
 	DATA_TYPE v;
-
-    DATA_TYPE *array_values;
-    u32* array_colIndices;
-    u32* array_rowPtr;
+	
+	DATA_TYPE *array_values = new DATA_TYPE[nnz];
+	u32* array_colIndices = new u32[nnz];
+	u32* array_rowPtr = new u32[row_size + 1];
 
     u32 row_size;
     u32 col_size;
@@ -745,11 +745,7 @@ int main(int argc, char** argv) {
                 std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
                 //std::cout << "read_mtx_spmm: check point 3" << std::endl;
 				
-				array_values = new DATA_TYPE[nnz];
-				array_colIndices = new u32[nnz];
-				array_rowPtr = new u32[row_size + 1];
-				
-				u32 line_number = 0;
+		u32 line_number = 0;
                 while (fgets(line, sizeof(line), fp_input) != NULL) {
 					if (line_number < nnz) {
 						//std::cout << "has entered if, start to sscanf" << std::endl;
@@ -786,6 +782,10 @@ int main(int argc, char** argv) {
 		//perror(argv[1]); //print the error message on stderr.
 		std::cout << "Error with input file name" << std::endl;
 		exit(EXIT_FAILURE);
+	}
+	
+	for(int i = 0; i < 65; i++){
+		std::cout << "array_rowPtr = " << i << " " << array_rowPtr[i] << std::endl;
 	}
 
     u32 no_vectors = 512;
