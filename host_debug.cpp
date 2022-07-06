@@ -50,7 +50,7 @@ void spmm_kernel(
 	DATA_TYPE *values_fifo = values;
 	u32 *col_indices_fifo = columnIndex;
 	DATA_TYPE_OUT y_fifo;
-	std::cout << "spmm_kernel : check 01" << std::endl;
+	//std::cout << "spmm_kernel : check 01" << std::endl;
 	/*
 	for (u32 i = 0; i < nnz; i+=1) {
 		#pragma HLS pipeline
@@ -61,7 +61,7 @@ void spmm_kernel(
 
 	u32 row_size_remains = 0;
 	
-	std::cout << "new_nnz = " << new_nnz << std::endl;
+	//std::cout << "new_nnz = " << new_nnz << std::endl;
 
 	for (u32 i = 0; i < new_nnz; i+=II) {
 		#pragma HLS pipeline
@@ -72,7 +72,7 @@ void spmm_kernel(
 			row_counter	= rowSize_local_rs[j++];
 		}
 		
-		std::cout << "spmm_kernel : check 02" << std::endl;
+		//std::cout << "spmm_kernel : check 02" << std::endl;
 
 		DATA_TYPE_OUT y_local = 0;
 
@@ -81,20 +81,20 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				std::cout << "spmm_kernel : check 03" << std::endl;
+				//std::cout << "spmm_kernel : check 03" << std::endl;
 				DATA_TYPE v = *values_fifo;
-				std::cout << "spmm_kernel : check 04" << std::endl;
+				//std::cout << "spmm_kernel : check 04" << std::endl;
 				u32 ci = *col_indices_fifo;
-				std::cout << "spmm_kernel : check 05" << std::endl;
+				//std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
-				 	std::cout << "spmm_kernel : check 06" << std::endl;
+				 	//std::cout << "spmm_kernel : check 06" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
-							std::cout << "spmm_kernel : check 07" << std::endl;
+							//std::cout << "spmm_kernel : check 07" << std::endl;
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
-							std::cout << "spmm_kernel : check 08" << std::endl;
+							//std::cout << "spmm_kernel : check 08" << std::endl;
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
 							ap_int<8> C_val;
 							C_val = v_val*x_temp;
@@ -212,11 +212,11 @@ void spmm(
 	//=======================================================
 
 	{
-	std::cout << "check 01" << std::endl;
+	//std::cout << "check 01" << std::endl;
 
 		u32 ideal_nnz = nnz / NO_HW_THREAD; //NO_HW_THREAD = 4, 理解为 四分区 
 						    //ideal_nnz理解为每个分区理想的非零值的数量
-		std::cout << "ideal_nnz = " << ideal_nnz << std::endl;
+		//std::cout << "ideal_nnz = " << ideal_nnz << std::endl;
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -228,13 +228,13 @@ void spmm(
 		u32 nrs = 0;
 		u32 new_nnz = 0;
 		u32 j = 0;
-		u32 prev_index = rowPtr[0]; //前一个rowPtr
-		std::cout << "rowPtr[0] = " << rowPtr[0] << std::endl;
+		u32 prev_index = first_rowPrt_value; //前一个rowPtr
+		//std::cout << "rowPtr[0] = " << rowPtr[0] << std::endl;
 		std::cout << "prev_index = " << prev_index << std::endl;
 		
 		u32 k = 0;
 		
-		std::cout << "check 02" << std::endl;
+		//std::cout << "check 02" << std::endl;
 
 		for (u32 i = 0; i < end-begin; i++) {
 			#pragma HLS PIPELINE
@@ -254,7 +254,7 @@ void spmm(
 				new_nnz = (II-rs%II); //补充的非零值？？？
 			}
 			
-			std::cout << "check 03" << std::endl;
+			//std::cout << "check 03" << std::endl;
 
 			u32 t = nnz_threads[j] + rs; //t 检测当前分区所有行的非零值数量是否达到了理想的数量
 			std::cout << "t = " << t << std::endl;
@@ -280,7 +280,7 @@ void spmm(
 			k++;
 		}
 
-		std::cout << "check 04" << std::endl;
+		//std::cout << "check 04" << std::endl;
 		
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -290,7 +290,7 @@ void spmm(
 		values_offset_threads[0] = 0;
 		row_offset_threads[0] = 0;
 		
-		std::cout << "check 05" << std::endl;
+		//std::cout << "check 05" << std::endl;
 
 		for (u32 i = 1; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -447,10 +447,6 @@ void spmm_block(
 		) {
 
     //#pragma SDS resource(1)
-    	std::cout << "Entering spmm" << std::endl;
-	u32 first_rowPrt_value = rowPtr[begin];
-	std::cout << "begin = " << begin << std::endl;
-	std::cout << "first_rowPrt_value = " << first_rowPrt_value << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
@@ -479,7 +475,7 @@ void spmm_block(
 
 			begin,
 			end,
-			first_rowPrt_value
+			rowPtr[begin]
 			);
 }
 
