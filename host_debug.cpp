@@ -623,7 +623,7 @@ u32 golden_spmm_ternary(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA
 	return 0;
 }
 
-u32 golden_spmm_byte(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X * x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
+u32 golden_spmm_byte(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X *x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
 
     std::cout << "golden_spmm_byte: check point 2" << std::endl;
 	u32 nvc = 0, i = 0, j = 0, rowStart = 0, rowEnd = row_size;
@@ -824,17 +824,17 @@ int main(int argc, char** argv) {
     u32 nnz;
 
 	if (fp_input != NULL) {
-        std::cout << "read_mtx_spmm: check point 2" << std::endl;
+        //std::cout << "read_mtx_spmm: check point 2" << std::endl;
 		char line[1000];
-	std::cout << "has defined a char line[1000]" << std::endl;
+	//std::cout << "has defined a char line[1000]" << std::endl;
         while (fgets(line, sizeof(line), fp_input) != NULL) {
-		std::cout << "has entered while" << std::endl;
+		//std::cout << "has entered while" << std::endl;
 			if (line[0] != '%') {
-				std::cout << "has entered if, start to sscanf" << std::endl;
+				//std::cout << "has entered if, start to sscanf" << std::endl;
 				sscanf(line, "%u %u %u", &row_size, &col_size, &nnz);
                 //std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
                 std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
-                std::cout << "read_mtx_spmm: check point 3" << std::endl;
+                //std::cout << "read_mtx_spmm: check point 3" << std::endl;
 				
 				array_values = new DATA_TYPE[nnz];
 				array_colIndices = new u32[nnz];
@@ -849,11 +849,13 @@ int main(int argc, char** argv) {
 						//printf("colindices %d val %f\n", c, v);
 						//std::cout << "colindices" << c << " val " << v << std::endl;
 
-						*(array_colIndices + line_number) = c;
-						std::cout << "array_colIndices = " << *array_colIndices << std::endl;
-						*(array_values + line_number) = v;
-						std::cout << "array_values = " << *array_values << std::endl;
-						std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
+						//*(array_colIndices + line_number) = c;
+						array_colIndices[line_number] = &c;
+						std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+						//*(array_values + line_number) = v;
+						array_values[line_number] = &v;
+						std::cout << "array_values = " << array_values[line_number] << std::endl;
+						//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 					}
 					else {
@@ -861,9 +863,10 @@ int main(int argc, char** argv) {
 
 						//printf("rowptr %d \n", r);
 						//std::cout << "rowptr " << c << std::endl;
-
-						*(array_rowPtr + (line_number - (nnz))) = r;
-						std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
+						//*(array_rowPtr + (line_number - (nnz))) = r;
+						array_rowPtr[line_number - nnz] = &r;
+						std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+						//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 					}
 					line_number++;
 				}
@@ -873,7 +876,7 @@ int main(int argc, char** argv) {
 	else {
 		//perror(argv[1]); //print the error message on stderr.
 		std::cout << "Error with input file name" << std::endl;
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
     u32 no_vectors = 512;
