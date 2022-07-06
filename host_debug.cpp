@@ -448,6 +448,7 @@ void spmm_block(
 
     //#pragma SDS resource(1)
     	std::cout << "Entering spmm" << std::endl;
+	std::cout << "rowPtr[begin] = " << rowPtr[begin] << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
@@ -771,7 +772,7 @@ int main(int argc, char** argv) {
 						//std::cout << "rowptr " << c << std::endl;
 						//*(array_rowPtr + (line_number - (nnz))) = r;
 						array_rowPtr[line_number - nnz] = r;
-						//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+						std::cout << "array_rowPtr = " << (line_number - nnz) << " " << array_rowPtr[line_number - nnz] << std::endl;
 						//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 					}
 					line_number++;
