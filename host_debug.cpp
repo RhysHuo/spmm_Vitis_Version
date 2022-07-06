@@ -780,7 +780,7 @@ int main(int argc, char** argv) {
 						//std::cout << "rowptr " << c << std::endl;
 						//*(array_rowPtr + (line_number - (nnz))) = r;
 						array_rowPtr[line_number - nnz] = r;
-						std::cout << "array_rowPtr = " << (line_number - nnz) << " " << array_rowPtr[line_number - nnz] << std::endl;
+						//std::cout << "array_rowPtr = " << (line_number - nnz) << " " << array_rowPtr[line_number - nnz] << std::endl;
 						//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 					}
 					line_number++;
@@ -840,8 +840,8 @@ int main(int argc, char** argv) {
 
     //Map buffers to userspace pointers
     OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
+    //OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
+    //OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
     OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
 	OCL_CHECK(err, array_y = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y, CL_TRUE, CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
 	OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
@@ -953,8 +953,8 @@ int main(int argc, char** argv) {
         return 1;
 
 	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_values, array_values));
-    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_colIndices, array_colIndices));
-	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_rowPtr, array_rowPtr));
+    //OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_colIndices, array_colIndices));
+	//OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_rowPtr, array_rowPtr));
 	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_x, array_x));
     OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_y, array_y));
     OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_y_golden, array_y_golden));
