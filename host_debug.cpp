@@ -216,6 +216,7 @@ void spmm(
 
 		u32 ideal_nnz = nnz / NO_HW_THREAD; //NO_HW_THREAD = 4, 理解为 四分区 
 						    //ideal_nnz理解为每个分区理想的非零值的数量
+		std::cout << "ideal_nnz = " << ideal_nnz << std::endl;
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -228,6 +229,9 @@ void spmm(
 		u32 new_nnz = 0;
 		u32 j = 0;
 		u32 prev_index = first_rowPrt_value; //前一个rowPtr
+		
+		std::cout << "prev_index = " << prev_index << std::endl;
+		
 		u32 k = 0;
 		
 		std::cout << "check 02" << std::endl;
@@ -235,7 +239,9 @@ void spmm(
 		for (u32 i = 0; i < end-begin; i++) {
 			#pragma HLS PIPELINE
 			u32 current_index= rowPtr[i+begin+1]; //当前rowPtr
+			std::cout << "current_index = " << current_index << std::endl;
 			u32 rs = (current_index - prev_index); //当前行中所包含的非零值的数量
+			std::cout << "rs = " << rs << std::endl;
 
 			if (rs == 0) { //当前行中所有值都为零
 				nrs = II; //II = 4
@@ -251,12 +257,13 @@ void spmm(
 			std::cout << "check 03" << std::endl;
 
 			u32 t = nnz_threads[j] + rs; //t 检测当前分区所有行的非零值数量是否达到了理想的数量
+			std::cout << "t = " << t << std::endl;
 			prev_index = current_index; //下一次运行
 
 			if (t < ideal_nnz) { //没有达到，继续储存
 				nnz_threads[j] = t;
 			} else { //达到了，开始存储下一个分区
-				if (j+1 < NO_HW_THREAD) { //没有达到最大分区数
+				if ((j+1) < NO_HW_THREAD) { //没有达到最大分区数
 
 					j++;
 					k=0;
@@ -350,7 +357,7 @@ void spmm(
 
 
 //=======================================================================================
-
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			for(int i = 0; i < 4; i++){
 				std::cout << "row_size_threads = " << row_size_threads[i] << std::endl;
 				std::cout << "nnz_threads = " << nnz_threads[i] << std::endl;
@@ -742,7 +749,7 @@ int main(int argc, char** argv) {
 				u32 line_number = 0;
                 while (fgets(line, sizeof(line), fp_input) != NULL) {
 					if (line_number < nnz) {
-						std::cout << "has entered if, start to sscanf" << std::endl;
+						//std::cout << "has entered if, start to sscanf" << std::endl;
 						sscanf(line, "%d %d", &c, &v);
 
 						//printf("colindices %d val %f\n", c, v);
