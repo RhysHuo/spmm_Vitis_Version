@@ -50,6 +50,7 @@ void spmm_kernel(
 	DATA_TYPE *values_fifo = values;
 	u32 *col_indices_fifo = columnIndex;
 	DATA_TYPE_OUT y_fifo;
+	std::cout << "spmm_kernel : check 01" << std::endl;
 	/*
 	for (u32 i = 0; i < nnz; i+=1) {
 		#pragma HLS pipeline
@@ -68,6 +69,8 @@ void spmm_kernel(
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
 		}
+		
+		std::cout << "spmm_kernel : check 02" << std::endl;
 
 		DATA_TYPE_OUT y_local = 0;
 
@@ -81,6 +84,7 @@ void spmm_kernel(
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
+				 	std::cout << "spmm_kernel : check 03" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
@@ -201,6 +205,7 @@ void spmm(
 	//=======================================================
 
 	{
+	std::cout << "check 01" << std::endl;
 
 		u32 ideal_nnz = nnz / NO_HW_THREAD;
 
@@ -216,6 +221,8 @@ void spmm(
 		u32 j = 0;
 		u32 prev_index = first_rowPrt_value;
 		u32 k = 0;
+		
+		std::cout << "check 02" << std::endl;
 
 		for (u32 i = 0; i < end-begin; i++) {
 			#pragma HLS PIPELINE
@@ -232,6 +239,8 @@ void spmm(
 				nrs = rs + (II-rs%II);
 				new_nnz = (II-rs%II);
 			}
+			
+			std::cout << "check 03" << std::endl;
 
 			u32 t = nnz_threads[j] + rs;
 			prev_index = current_index;
@@ -256,7 +265,8 @@ void spmm(
 			k++;
 		}
 
-
+		std::cout << "check 04" << std::endl;
+		
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
 			new_nnz_threads[i] += nnz_threads[i];
@@ -264,6 +274,8 @@ void spmm(
 
 		values_offset_threads[0] = 0;
 		row_offset_threads[0] = 0;
+		
+		std::cout << "check 05" << std::endl;
 
 		for (u32 i = 1; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -298,6 +310,9 @@ void spmm(
 
 		//if(!ternary)
 		//{
+		
+		std::cout << "check 06" << std::endl;
+		
 			for (u32 i=0; i<(col_size>>2); i++){
 				#pragma HLS pipeline
 				for (u32 j=0; j<(NO_HW_THREAD); j++){
@@ -329,7 +344,7 @@ void spmm(
 //=======================================================================================
 
 			u32 i;
-
+			std::cout << "check 07" << std::endl;
 			i = 0;
 			spmm_kernel(
 					ternary,
@@ -343,8 +358,9 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
-
+			
 			i = 1;
+			std::cout << "check 08" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -359,6 +375,7 @@ void spmm(
 			);
 
 			i = 2;
+			std::cout << "check 09" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -373,6 +390,7 @@ void spmm(
 			);
 
 			i = 3;
+			std::cout << "check 10" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -406,6 +424,7 @@ void spmm_block(
 		) {
 
     //#pragma SDS resource(1)
+    	std::cout << "Entering spmm" << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
