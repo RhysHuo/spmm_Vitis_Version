@@ -214,7 +214,8 @@ void spmm(
 	{
 	std::cout << "check 01" << std::endl;
 
-		u32 ideal_nnz = nnz / NO_HW_THREAD;
+		u32 ideal_nnz = nnz / NO_HW_THREAD; //NO_HW_THREAD = 4, 理解为 四分区 
+						    //ideal_nnz理解为每个分区理想的非零值的数量
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -226,47 +227,47 @@ void spmm(
 		u32 nrs = 0;
 		u32 new_nnz = 0;
 		u32 j = 0;
-		u32 prev_index = first_rowPrt_value;
+		u32 prev_index = first_rowPrt_value; //前一个rowPtr
 		u32 k = 0;
 		
 		std::cout << "check 02" << std::endl;
 
 		for (u32 i = 0; i < end-begin; i++) {
 			#pragma HLS PIPELINE
-			u32 current_index= rowPtr[i+begin+1];
-			u32 rs = (current_index - prev_index);
+			u32 current_index= rowPtr[i+begin+1]; //当前rowPtr
+			u32 rs = (current_index - prev_index); //当前行中所包含的非零值的数量
 
-			if (rs == 0) {
-				nrs = II;
+			if (rs == 0) { //当前行中所有值都为零
+				nrs = II; //II = 4
 				new_nnz = II;
-			} else if (rs%II == 0) {
-				nrs = rs;
+			} else if (rs%II == 0) { //当前行中非零值的数量为4的倍数
+				nrs = rs; //nrs为
 				new_nnz = 0;
 			} else {
-				nrs = rs + (II-rs%II);
-				new_nnz = (II-rs%II);
+				nrs = rs + (II-rs%II); //nrs 为 大于rs的最近的四的倍数
+				new_nnz = (II-rs%II); //补充的非零值？？？
 			}
 			
 			std::cout << "check 03" << std::endl;
 
-			u32 t = nnz_threads[j] + rs;
-			prev_index = current_index;
+			u32 t = nnz_threads[j] + rs; //t 检测当前分区所有行的非零值数量是否达到了理想的数量
+			prev_index = current_index; //下一次运行
 
-			if (t < ideal_nnz) {
+			if (t < ideal_nnz) { //没有达到，继续储存
 				nnz_threads[j] = t;
-			} else {
-				if (j+1 < NO_HW_THREAD) {
+			} else { //达到了，开始存储下一个分区
+				if (j+1 < NO_HW_THREAD) { //没有达到最大分区数
 
 					j++;
 					k=0;
-					nnz_threads[j] = rs;
+					nnz_threads[j] = rs; //新分区非零值累计
 
-				} else {
-					nnz_threads[j] = t;
+				} else { //达到了最大分区数
+					nnz_threads[j] = t; 
 				}
 			}
-			row_size_threads[j]++;
-			new_nnz_threads[j] += new_nnz;
+			row_size_threads[j]++; // 当前分区所包含行数+1
+			new_nnz_threads[j] += new_nnz; //当前分区补充的非零值的数量
 			rowSizeNew_local_rs[j][k]  = rs;
 			rowSizeNew_local_nrs[j][k] = nrs;
 			k++;
