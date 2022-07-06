@@ -351,6 +351,14 @@ void spmm(
 
 //=======================================================================================
 
+			for(int i = 0; i < 4; i++){
+				std::cout << "row_size_threads = " << row_size_threads[i] << std::endl;
+				std::cout << "nnz_threads = " << nnz_threads[i] << std::endl;
+				std::cout << "new_nnz_threads = " << new_nnz_threads[i] << std::endl;
+				std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			}
+			
+
 			u32 i;
 			std::cout << "check 07" << std::endl;
 			i = 0;
@@ -464,116 +472,6 @@ void spmm_block(
 			rowPtr[begin]
 			);
 }
-/*
-double getTimestamp() {
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	return tv.tv_usec + tv.tv_sec * 1e6;
-}
-void msleep(u32 c) {
-	usleep(c * 1000);
-}
-
-float cpu_percentage;
-float low_percentage;
-float high_percentage;
-*/
-
-/*
-u32 read_mtx_spmm(u32* row_size, u32* col_size, u32* nnz,FILE *fp_input) {
-
-    std::cout << "read_csr: check point 1" << std::endl;
-
-	u32 r;
-	u32 c;
-	DATA_TYPE v;
-
-	u32 nnzeo_false = 0;
-	if (fp_input != NULL) {
-        std::cout << "read_mtx_spmm: check point 2" << std::endl;
-		char line[1000];
-		//while (fgets(line, sizeof line, fp_input) != NULL) {// read a line from a file
-        while (fgets(line, sizeof(line), fp_input) != NULL) {
-			if (line[0] != '%') {
-				sscanf(line, "%d %d %d", row_size, col_size, nnz);
-				std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
-                std::cout << "read_mtx_spmm: check point 3" << std::endl;
-
-				{
-					array_values = (DATA_TYPE*)fpga_malloc(*nnz * sizeof(DATA_TYPE));
-					if (!array_values) {
-						std::cout << "unable to allocate memory array_values" << std::endl;
-						exit(1);
-					}
-
-					array_colIndices = (u32*)fpga_malloc(*nnz * sizeof(u32));
-					if (!array_colIndices) {
-						std::cout << "unable to allocate memory array_colIndices" << std::endl;
-						exit(1);
-					}
-
-					array_rowPtr = (u32*)fpga_malloc((*row_size + 1) * sizeof(u32));
-					if (!array_rowPtr) {
-						std::cout << "unable to allocate memory array_rowPtr" << std::endl;
-						exit(1);
-					}
-
-					array_x = (DATA_TYPE_X*)fpga_malloc(*col_size * no_vectors * sizeof(DATA_TYPE_X)/4);
-					if (!array_x) {
-						std::cout << "unable to allocate memory array_x" << std::endl;
-						exit(1);
-					}
-
-					array_y = (DATA_TYPE_OUT*)fpga_malloc(*row_size * no_vectors * sizeof(DATA_TYPE_OUT));
-					if (!array_y) {
-						std::cout << "unable to allocate memory array_y" << std::endl;
-						exit(1);
-					}
-
-					array_y_golden = (DATA_TYPE_OUT*)malloc(*row_size * no_vectors * sizeof(DATA_TYPE_OUT));
-					if (!array_y_golden) {
-						std::cout << "unable to allocate memory array_y_golden" << std::endl;
-						exit(1);
-					}
-				}
-
-				u32 line_number = 0;
-				//while (fgets(line, sizeof line, fp_input) != NULL) {// read a line from a file
-                while (fgets(line, sizeof(line), fp_input) != NULL) {
-					if (line_number < *nnz) {
-
-						sscanf(line, "%d %d", &c, &v);
-
-						//printf("colindices %d val %f\n", c, v);
-						//std::cout << "colindices" << c << " val " << v << std::endl;
-
-						*(array_colIndices + line_number) = c;
-
-						*(array_values + line_number) = v;
-
-					}
-					else {
-						sscanf(line, "%d", &r);
-
-						//printf("rowptr %d \n", r);
-						//std::cout << "rowptr " << c << std::endl;
-
-						*(array_rowPtr + (line_number - (*nnz))) = r;
-					}
-					line_number++;
-				}
-			}
-		}
-	}
-	else {
-		//perror(argv[1]); //print the error message on stderr.
-		std::cout << "Error with input file name" << std::endl;
-		exit(1);
-	}
-
-	return 0;
-}
-*/
 
 u32 golden_spmm_ternary(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X * x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
 
@@ -852,10 +750,10 @@ int main(int argc, char** argv) {
 
 						//*(array_colIndices + line_number) = c;
 						array_colIndices[line_number] = c;
-						std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+						//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
 						//*(array_values + line_number) = v;
 						array_values[line_number] = v;
-						std::cout << "array_values = " << array_values[line_number] << std::endl;
+						//std::cout << "array_values = " << array_values[line_number] << std::endl;
 						//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 					}
@@ -866,7 +764,7 @@ int main(int argc, char** argv) {
 						//std::cout << "rowptr " << c << std::endl;
 						//*(array_rowPtr + (line_number - (nnz))) = r;
 						array_rowPtr[line_number - nnz] = r;
-						std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+						//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
 						//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 					}
 					line_number++;
