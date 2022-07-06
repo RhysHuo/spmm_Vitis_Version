@@ -437,18 +437,18 @@ int main(int argc, char** argv) {
     u32 no_vectors = 512;
 
     // Map our user-allocated buffers as OpenCL buffers using a shared host pointer
-    OCL_CHECK(err, cl::Buffer buffer_array_values(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , *nnz * sizeof(DATA_TYPE), NULL, &err));
-    OCL_CHECK(err, cl::Buffer buffer_array_colIndices(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , *nnz * sizeof(u32), NULL, &err));    
-    OCL_CHECK(err, cl::Buffer buffer_array_rowPtr(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , (*row_size + 1) * sizeof(u32), NULL, &err));
-    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , *col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
-    OCL_CHECK(err, cl::Buffer buffer_array_y(context, CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR , *row_size * no_vectors * sizeof(DATA_TYPE_OUT), NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_values(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(DATA_TYPE), NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_colIndices(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(u32), NULL, &err));    
+    OCL_CHECK(err, cl::Buffer buffer_array_rowPtr(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , (row_size + 1) * sizeof(u32), NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_y(context, CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR , row_size * no_vectors * sizeof(DATA_TYPE_OUT), NULL, &err));
 
 	// For buffer buffer_array_y_golden, since we aren't using it for a kernel we'll specify the bank allocation
     cl_mem_ext_ptr_t bank_ext;
     bank_ext.flags = 0 | XCL_MEM_TOPOLOGY;
     bank_ext.obj   = NULL;
     bank_ext.param = 0;
-	OCL_CHECK(err, cl::Buffer buffer_array_y_golden(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR | CL_MEM_EXT_PTR_XILINX, *row_size * no_vectors * sizeof(DATA_TYPE_OUT), &bank_ext, &err));
+	OCL_CHECK(err, cl::Buffer buffer_array_y_golden(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR | CL_MEM_EXT_PTR_XILINX, row_size * no_vectors * sizeof(DATA_TYPE_OUT), &bank_ext, &err));
 
     DATA_TYPE_X *array_x;
     DATA_TYPE_OUT *array_y;
@@ -473,12 +473,12 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
 
     //Map buffers to userspace pointers
-    OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, *nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, *nnz * sizeof(u32), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (*row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, *col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
-	OCL_CHECK(err, array_y = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y, CL_TRUE, CL_MAP_READ, 0, *row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
-	OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, *row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
+    OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
+    OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
+    OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
+    OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
+	OCL_CHECK(err, array_y = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y, CL_TRUE, CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
+	OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
 
     //Initialization
     std::cout << "Start to init_array " << std::endl;
