@@ -42,7 +42,7 @@ void spmm_kernel(
 		u32 new_nnz
 ) {
 
-	#pragma HLS DATAFLOW
+	//#pragma HLS DATAFLOW
 	u32 row_size_tmp=0;
 	u32 j = 0;
 
@@ -168,7 +168,7 @@ void spmm(
 		u32 first_rowPrt_value
 
 		) {
-	#pragma HLS DATAFLOW
+	//#pragma HLS DATAFLOW
 
 	u32 rowSizeNew_local_rs[NO_HW_THREAD][ROW_SIZE_THREAD_MAX];
 	u32 rowSizeNew_local_nrs[NO_HW_THREAD][ROW_SIZE_THREAD_MAX];
