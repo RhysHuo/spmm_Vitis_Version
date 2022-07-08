@@ -349,7 +349,9 @@ int main(int argc, char** argv) {
     std::cout << "Start to init_array " << std::endl;
 
     init_array(S_ternary, array_x, no_vectors, col_size);
-
+	
+	std::cout << "init_array completed." << std::endl;
+	
 	if (fp_input != NULL) {
 		char line_2[1000];
 		u32 line_number = 0;
@@ -383,6 +385,7 @@ int main(int argc, char** argv) {
 			line_number++;
 		}
 	}
+	std::cout << "Read data completed." << std::endl;
 
 	//double start_time, end_time, execution_time;
     
