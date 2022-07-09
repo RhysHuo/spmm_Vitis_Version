@@ -50,14 +50,14 @@ void spmm_kernel(
 	u32 row_counter = 0;
 
 	hls::stream<DATA_TYPE>       values_fifo;
-	//#pragma HLS STREAM variable=values_fifo depth=4
-	#pragma HLS STREAM variable=values_fifo
+	#pragma HLS STREAM variable=values_fifo depth=32
+	//#pragma HLS STREAM variable=values_fifo
 	hls::stream<u32>             col_indices_fifo;
-	//#pragma HLS STREAM variable=col_indices_fifo depth=4
-	#pragma HLS STREAM variable=col_indices_fifo
+	#pragma HLS STREAM variable=col_indices_fifo depth=32
+	//#pragma HLS STREAM variable=col_indices_fifo
 	hls::stream<DATA_TYPE_OUT>       y_fifo;
-	//#pragma HLS STREAM variable=y_fifo depth=4
-	#pragma HLS STREAM variable=y_fifo
+	#pragma HLS STREAM variable=y_fifo depth=32
+	//#pragma HLS STREAM variable=y_fifo
 
 	for (u32 i = 0; i < nnz; i+=1) {
 		#pragma HLS pipeline
@@ -79,6 +79,7 @@ void spmm_kernel(
 		DATA_TYPE_OUT y_local = 0;
 
 		for (u32 p = 0; p < II; p++) {
+			#pragma HLS pipeline //+
 			row_size_remains++;
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
@@ -89,6 +90,7 @@ void spmm_kernel(
 				 if(ternary == 0)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
+							#pragma HLS pipeline //+
 							ap_int<8> v_val = v.range(z+7,z);
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
@@ -101,7 +103,7 @@ void spmm_kernel(
 				 else if (ternary == 1)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=2) {
-
+							#pragma HLS pipeline //+
 							ap_int<2> v_val = v.range(z+1,z);
 							ap_int<2> x_temp = x_local[ci].range(z+1,z);
 							ap_int<2> C_val;
@@ -112,7 +114,7 @@ void spmm_kernel(
 				 else
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=4) {
-
+							#pragma HLS pipeline //+
 							ap_int<4> v_val = v.range(z+3,z);
 							ap_int<4> x_temp = x_local[ci].range(z+3,z);
 							ap_int<4> C_val;
@@ -185,8 +187,8 @@ void spmm(
 	//================================================
 
 	DATA_TYPE x_local[NO_HW_THREAD][COL_SIZE_MAX];
-	#pragma HLS ARRAY_PARTITION variable=x_local complete dim=0
-	//#pragma HLS ARRAY_PARTITION variable=x_local cyclic factor=4 dim=2
+	#pragma HLS ARRAY_PARTITION variable=x_local complete dim=1
+	#pragma HLS ARRAY_PARTITION variable=x_local cyclic factor=4 dim=2
 	//================================================
 
 	u32 row_size_threads[NO_HW_THREAD];
@@ -332,21 +334,23 @@ void spmm(
 //=======================================================================================
 
 			u32 i;
-
-			i = 0;
-			spmm_kernel(
-					ternary,
-					rowSizeNew_local_rs[i],
-					rowSizeNew_local_nrs[i],
-					columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
-					values_0 + first_rowPrt_value + values_offset_threads[i],
-					y_0 + begin + nv*row_size + row_offset_threads[i],
-					x_local[i],
-					row_size_threads[i],
-					nnz_threads[i],
-					new_nnz_threads[i]
-			);
-
+			for (int i = 0; i < NO_HW_THREAD; i++) {
+			//i = 0;
+				#pragma HLS pipeline
+				spmm_kernel(
+						ternary,
+						rowSizeNew_local_rs[i],
+						rowSizeNew_local_nrs[i],
+						columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
+						values_0 + first_rowPrt_value + values_offset_threads[i],
+						y_0 + begin + nv*row_size + row_offset_threads[i],
+						x_local[i],
+						row_size_threads[i],
+						nnz_threads[i],
+						new_nnz_threads[i]
+				);
+			}
+			/*
 			i = 1;
 			spmm_kernel(
 					ternary,
@@ -388,6 +392,7 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
+			*/
 		}
 }
 
