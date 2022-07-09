@@ -42,7 +42,7 @@ void spmm_kernel(
 		u32 new_nnz
 ) {
 
-	//#pragma HLS DATAFLOW
+	#pragma HLS DATAFLOW
 	u32 row_size_tmp=0;
 	u32 j = 0;
 
@@ -50,11 +50,14 @@ void spmm_kernel(
 	u32 row_counter = 0;
 
 	hls::stream<DATA_TYPE>       values_fifo;
-	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
+	//#pragma HLS STREAM variable=values_fifo depth=4
+	#pragma HLS STREAM variable=values_fifo
 	hls::stream<u32>             col_indices_fifo;
-	#pragma HLS STREAM variable=col_indices_fifo depth=4 dim=1
+	//#pragma HLS STREAM variable=col_indices_fifo depth=4
+	#pragma HLS STREAM variable=col_indices_fifo
 	hls::stream<DATA_TYPE_OUT>       y_fifo;
-	#pragma HLS STREAM variable=y_fifo depth=4 dim=1
+	//#pragma HLS STREAM variable=y_fifo depth=4
+	#pragma HLS STREAM variable=y_fifo
 
 	for (u32 i = 0; i < nnz; i+=1) {
 		#pragma HLS pipeline
