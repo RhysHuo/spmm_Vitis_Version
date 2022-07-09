@@ -304,7 +304,8 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, cl::Buffer buffer_array_values(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(DATA_TYPE), NULL, &err));
     OCL_CHECK(err, cl::Buffer buffer_array_colIndices(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(u32), NULL, &err));    
     OCL_CHECK(err, cl::Buffer buffer_array_rowPtr(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , (row_size + 1) * sizeof(u32), NULL, &err));
-    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
+    //OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X), NULL, &err));
     OCL_CHECK(err, cl::Buffer buffer_array_y(context, CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR , row_size * no_vectors * sizeof(DATA_TYPE_OUT), NULL, &err));
 
 	// For buffer buffer_array_y_golden, since we aren't using it for a kernel we'll specify the bank allocation
@@ -323,6 +324,7 @@ int main(int argc, char** argv) {
     u32 S_end = row_size;
 
     // Set the kernal argument
+	/*
     int narg = 0;
     OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
@@ -336,15 +338,17 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, err = krnl.setArg(narg++, nnz));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_begin));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
+    */
 
     //Map buffers to userspace pointers
     OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
     OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
     OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
+    //OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
+	OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X), nullptr, nullptr, &err));
 	OCL_CHECK(err, array_y = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y, CL_TRUE, CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
 	//OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
-
+	
     //Initialization
     std::cout << "Start to init_array " << std::endl;
 
@@ -386,6 +390,20 @@ int main(int argc, char** argv) {
 		}
 	}
 	std::cout << "Read data completed." << std::endl;
+	
+	int narg = 0;
+    OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
+    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
+    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_colIndices));
+    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_rowPtr));
+    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_x));
+    OCL_CHECK(err, err = krnl.setArg(narg++, no_vectors));
+    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_y));
+    OCL_CHECK(err, err = krnl.setArg(narg++, row_size));
+    OCL_CHECK(err, err = krnl.setArg(narg++, col_size));
+    OCL_CHECK(err, err = krnl.setArg(narg++, nnz));
+    OCL_CHECK(err, err = krnl.setArg(narg++, S_begin));
+    OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
 
 	//double start_time, end_time, execution_time;
     
@@ -408,6 +426,7 @@ int main(int argc, char** argv) {
 	std::cout << "enqueueMigrateMemObjects_CL_MIGRATE_MEM_OBJECT_HOST completed." << std::endl;
     
     q.finish();
+	std::cout << "q.finish() completed." << std::endl;
 
     /*
 	start_time = getTimestamp();
