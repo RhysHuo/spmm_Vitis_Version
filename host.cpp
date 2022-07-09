@@ -391,9 +391,11 @@ int main(int argc, char** argv) {
     
     // Date will be migrate to the kernal space
     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_array_values, buffer_array_colIndices, buffer_array_rowPtr, buffer_array_x}, 0));
+	std::cout << "enqueueMigrateMemObjects_0 completed." << std::endl;
     
     // Lauch the kernal
     OCL_CHECK(err, err = q.enqueueTask(krnl));
+	std::cout << "enqueueTask completed." << std::endl;
     
     // To view the results, this call will transfer the data from FPGA to the host
 
@@ -403,6 +405,7 @@ int main(int argc, char** argv) {
 	// migrating the buffer back to the host for us. This is a coding style choice you must make.
 
     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_array_y}, CL_MIGRATE_MEM_OBJECT_HOST));
+	std::cout << "enqueueMigrateMemObjects_CL_MIGRATE_MEM_OBJECT_HOST completed." << std::endl;
     
     q.finish();
 
