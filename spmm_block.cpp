@@ -49,14 +49,14 @@ void spmm_kernel(
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
 
-	hls::stream<DATA_TYPE>       values_fifo;
-	#pragma HLS STREAM variable=values_fifo depth=128
+	hls::stream<DATA_TYPE>& values_fifo;
+	//#pragma HLS STREAM variable=values_fifo depth=128
 	//#pragma HLS STREAM variable=values_fifo
-	hls::stream<u32>             col_indices_fifo;
-	#pragma HLS STREAM variable=col_indices_fifo depth=128
+	hls::stream<u32>& col_indices_fifo;
+	//#pragma HLS STREAM variable=col_indices_fifo depth=128
 	//#pragma HLS STREAM variable=col_indices_fifo
-	hls::stream<DATA_TYPE_OUT>       y_fifo;
-	#pragma HLS STREAM variable=y_fifo depth=32
+	hls::stream<DATA_TYPE_OUT>& y_fifo;
+	//#pragma HLS STREAM variable=y_fifo depth=32
 	//#pragma HLS STREAM variable=y_fifo
 
 	for (u32 i = 0; i < nnz; i+=1) {
