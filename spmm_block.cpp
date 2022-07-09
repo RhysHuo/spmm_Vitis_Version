@@ -182,7 +182,7 @@ void spmm(
 	//================================================
 
 	DATA_TYPE x_local[NO_HW_THREAD][COL_SIZE_MAX];
-	#pragma HLS ARRAY_PARTITION variable=x_local complete dim=1
+	#pragma HLS ARRAY_PARTITION variable=x_local complete dim=0
 	//#pragma HLS ARRAY_PARTITION variable=x_local cyclic factor=4 dim=2
 	//================================================
 
