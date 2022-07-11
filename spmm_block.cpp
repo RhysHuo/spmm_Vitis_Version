@@ -88,7 +88,7 @@ void spmm_kernel(
 		DATA_TYPE_OUT y_local = 0;
 
 		for (u32 p = 0; p < II; p++) {
-			#pragma HLS pipeline //+
+			//#pragma HLS pipeline //+
 			row_size_remains++;
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
@@ -99,7 +99,7 @@ void spmm_kernel(
 				 if(ternary == 0)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
-							#pragma HLS pipeline //+
+							//#pragma HLS pipeline //+
 							ap_int<8> v_val = v.range(z+7,z);
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
@@ -112,7 +112,7 @@ void spmm_kernel(
 				 else if (ternary == 1)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=2) {
-							#pragma HLS pipeline //+
+							//#pragma HLS pipeline //+
 							ap_int<2> v_val = v.range(z+1,z);
 							ap_int<2> x_temp = x_local[ci].range(z+1,z);
 							ap_int<2> C_val;
@@ -123,7 +123,7 @@ void spmm_kernel(
 				 else
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=4) {
-							#pragma HLS pipeline //+
+							//#pragma HLS pipeline //+
 							ap_int<4> v_val = v.range(z+3,z);
 							ap_int<4> x_temp = x_local[ci].range(z+3,z);
 							ap_int<4> C_val;
@@ -222,6 +222,7 @@ void spmm(
 		u32 ideal_nnz = nnz / NO_HW_THREAD;
 		u32 local_begin = begin;
 		u32 local_end = end;
+		u32* local_rowPtr = rowPtr;
 		
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
@@ -239,7 +240,7 @@ void spmm(
 
 		for (u32 i = 0; i < local_end-local_begin; i++) {
 			#pragma HLS PIPELINE
-			u32 current_index= rowPtr[i+local_begin+1];
+			u32 current_index= local_rowPtr[i+local_begin+1];
 			u32 rs = (current_index - prev_index);
 
 			if (rs == 0) {
