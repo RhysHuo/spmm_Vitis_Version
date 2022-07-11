@@ -56,7 +56,7 @@ void spmm_kernel(
 	#pragma HLS STREAM variable=col_indices_fifo depth=128
 	//#pragma HLS STREAM variable=col_indices_fifo
 	hls::stream<DATA_TYPE_OUT>  y_fifo;
-	#pragma HLS STREAM variable=y_fifo depth=32
+	#pragma HLS STREAM variable=y_fifo depth=128
 	//#pragma HLS STREAM variable=y_fifo
 
 	for (u32 i = 0; i < nnz; i+=1) {
@@ -179,7 +179,7 @@ void spmm(
 		u32 first_rowPrt_value
 
 		) {
-	//#pragma HLS DATAFLOW
+	#pragma HLS DATAFLOW
 
 	u32 rowSizeNew_local_rs[NO_HW_THREAD][ROW_SIZE_THREAD_MAX];
 	u32 rowSizeNew_local_nrs[NO_HW_THREAD][ROW_SIZE_THREAD_MAX];
@@ -340,23 +340,23 @@ void spmm(
 //=======================================================================================
 
 			u32 i;
-			for (int i = 0; i < NO_HW_THREAD; i++) {
-			//i = 0;
-				#pragma HLS pipeline
-				spmm_kernel(
-						ternary,
-						rowSizeNew_local_rs[i],
-						rowSizeNew_local_nrs[i],
-						columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
-						values_0 + first_rowPrt_value + values_offset_threads[i],
-						y_0 + begin + nv*row_size + row_offset_threads[i],
-						x_local[i],
-						row_size_threads[i],
-						nnz_threads[i],
-						new_nnz_threads[i]
-				);
-			}
-			/*
+			//for (int i = 0; i < NO_HW_THREAD; i++) {
+			i = 0;
+				//#pragma HLS pipeline
+			spmm_kernel(
+					ternary,
+					rowSizeNew_local_rs[i],
+					rowSizeNew_local_nrs[i],
+					columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
+					values_0 + first_rowPrt_value + values_offset_threads[i],
+					y_0 + begin + nv*row_size + row_offset_threads[i],
+					x_local[i],
+					row_size_threads[i],
+					nnz_threads[i],
+					new_nnz_threads[i]
+			);
+			//}
+			
 			i = 1;
 			spmm_kernel(
 					ternary,
@@ -398,7 +398,7 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
-			*/
+			
 		}
 }
 
