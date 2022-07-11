@@ -40,7 +40,7 @@ SOFTWARE.
  */
 //const static int II = 4;
 
-const static int II = 4;
+const static int II = 10;
 
 const static int NO_HW_THREAD = 4;
 
@@ -61,7 +61,6 @@ const static int COL_SIZE_MAX        = (2048);
 //const static int ROW_SIZE_THREAD_MAX = (1024);
 //const static int COL_SIZE_MAX        = (1024);
 
-extern "C" {
 
 void spmm_kernel(
 	ap_uint<2> ternary,
@@ -109,6 +108,8 @@ void spmm(
 
 );
 
+extern "C" {
+
 void spmm_block(
 	ap_uint<2> ternary,
 	DATA_TYPE *values,
@@ -123,6 +124,7 @@ void spmm_block(
 	u32        begin,
 	u32        end
 );
+	
 }
 
 
