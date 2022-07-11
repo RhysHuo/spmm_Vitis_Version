@@ -223,6 +223,7 @@ void spmm(
 		u32 local_begin = begin;
 		u32 local_end = end;
 		u32* local_rowPtr = rowPtr;
+		int local_II = II;
 		
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
@@ -244,14 +245,14 @@ void spmm(
 			u32 rs = (current_index - prev_index);
 
 			if (rs == 0) {
-				nrs = II;
-				new_nnz = II;
-			} else if (rs%II == 0) {
+				nrs = local_II;
+				new_nnz = local_II;
+			} else if (rs%local_II == 0) {
 				nrs = rs;
 				new_nnz = 0;
 			} else {
-				nrs = rs + (II-rs%II);
-				new_nnz = (II-rs%II);
+				nrs = rs + (local_II-rs%local_II);
+				new_nnz = (local_II-rs%local_II);
 			}
 
 			u32 t = nnz_threads[j] + rs;
