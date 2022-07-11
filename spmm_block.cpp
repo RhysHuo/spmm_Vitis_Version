@@ -210,6 +210,9 @@ void spmm(
 	#pragma HLS ARRAY_PARTITION variable=row_offset_threads complete dim=1
 	#pragma HLS ARRAY_PARTITION variable=nnz_threads complete dim=1
 	#pragma HLS ARRAY_PARTITION variable=new_nnz_threads complete dim=1
+	
+	u32 local_no_vectors = no_vectors;
+	u32 local_col_size = col_size;
 
 
 	//=======================================================
@@ -219,8 +222,6 @@ void spmm(
 		u32 ideal_nnz = nnz / NO_HW_THREAD;
 		u32 local_begin = begin;
 		u32 local_end = end;
-		u32 local_no_vectors = no_vectors;
-		u32 local_col_size = col_size;
 		
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
