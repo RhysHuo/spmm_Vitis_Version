@@ -53,25 +53,25 @@ void spmm_kernel(
 	u32 row_counter = 0;
 
 	hls::stream<DATA_TYPE> values_fifo;
-	#pragma HLS STREAM variable=values_fifo depth=512
+	#pragma HLS STREAM variable=values_fifo depth=4
 	//#pragma HLS STREAM variable=values_fifo
 	hls::stream<u32> col_indices_fifo;
-	#pragma HLS STREAM variable=col_indices_fifo depth=512
+	#pragma HLS STREAM variable=col_indices_fifo depth=4
 	//#pragma HLS STREAM variable=col_indices_fifo
-	hls::stream<DATA_TYPE_OUT>  y_fifo;
-	#pragma HLS STREAM variable=y_fifo depth=512
+	hls::stream<DATA_TYPE_OUT> y_fifo;
+	#pragma HLS STREAM variable=y_fifo depth=4
 	//#pragma HLS STREAM variable=y_fifo
 
 	for (u32 i = 0; i < local_nnz; i+=1) {
 		#pragma HLS pipeline
-		values_fifo << values[i];
+		values_fifo.write(values[i]);
 		//col_indices_fifo << columnIndex[i];
 	}
 	
 	for (u32 i = 0; i < local_nnz; i+=1) {
 		#pragma HLS pipeline
 		//values_fifo << values[i];
-		col_indices_fifo << columnIndex[i];
+		col_indices_fifo.write(columnIndex[i]);
 	}
 
 	u32 row_size_remains = 0;
@@ -139,7 +139,7 @@ void spmm_kernel(
 		//std::cout << "y_tmp  " << y_tmp << std::endl;
 
 		if (row_size_tmp == 0) {
-			y_fifo << y_tmp;
+			y_fifo.write(y_tmp);
 
 		}
 	}
