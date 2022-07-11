@@ -45,6 +45,9 @@ void spmm_kernel(
 	#pragma HLS DATAFLOW
 	u32 row_size_tmp=0;
 	u32 j = 0;
+	u32 local_new_nnz = new_nnz;
+	u32 local_row_size = row_size;
+	u32 local_nnz = nnz;
 
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
@@ -59,13 +62,13 @@ void spmm_kernel(
 	#pragma HLS STREAM variable=y_fifo depth=128
 	//#pragma HLS STREAM variable=y_fifo
 
-	for (u32 i = 0; i < nnz; i+=1) {
+	for (u32 i = 0; i < local_nnz; i+=1) {
 		#pragma HLS pipeline
 		values_fifo << values[i];
 		//col_indices_fifo << columnIndex[i];
 	}
 	
-	for (u32 i = 0; i < nnz; i+=1) {
+	for (u32 i = 0; i < local_nnz; i+=1) {
 		#pragma HLS pipeline
 		//values_fifo << values[i];
 		col_indices_fifo << columnIndex[i];
@@ -73,7 +76,7 @@ void spmm_kernel(
 
 	u32 row_size_remains = 0;
 
-	for (u32 i = 0; i < new_nnz; i+=II) {
+	for (u32 i = 0; i < local_new_nnz; i+=II) {
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
@@ -141,7 +144,7 @@ void spmm_kernel(
 		}
 	}
 
-	for (u32 i = 0; i < row_size; i+=1) {
+	for (u32 i = 0; i < local_row_size; i+=1) {
 		#pragma HLS pipeline
 		y[i] = y_fifo.read();
 	}
@@ -167,7 +170,7 @@ void spmm(
 		DATA_TYPE_OUT *y_3,
 
 		DATA_TYPE_X *x,
-		u32        no_vectors,
+		u32 no_vectors,
 
 		u32 col_size,
 		u32 row_size,
@@ -214,6 +217,11 @@ void spmm(
 	{
 
 		u32 ideal_nnz = nnz / NO_HW_THREAD;
+		u32 local_begin = begin;
+		u32 local_end = end;
+		u32 local_no_vectors = no_vectors;
+		u32 local_col_size = col_size;
+		
 
 		for (u32 i = 0; i < NO_HW_THREAD; i++) {
 			#pragma HLS UNROLL
@@ -228,9 +236,9 @@ void spmm(
 		u32 prev_index = first_rowPrt_value;
 		u32 k = 0;
 
-		for (u32 i = 0; i < end-begin; i++) {
+		for (u32 i = 0; i < local_end-local_begin; i++) {
 			#pragma HLS PIPELINE
-			u32 current_index= rowPtr[i+begin+1];
+			u32 current_index= rowPtr[i+local_begin+1];
 			u32 rs = (current_index - prev_index);
 
 			if (rs == 0) {
@@ -293,7 +301,7 @@ void spmm(
 
 //=======================================================================================
 
-	for (u32 nv=0; nv < no_vectors; nv++){
+	for (u32 nv=0; nv < local_no_vectors; nv++){
 
 		//for (u32 i=0; i<col_size; i+=4){
 		//#pragma HLS pipeline
@@ -309,10 +317,10 @@ void spmm(
 
 		//if(!ternary)
 		//{
-			for (u32 i=0; i<(col_size>>2); i++){
+			for (u32 i=0; i<(local_col_size>>2); i++){
 				#pragma HLS pipeline
 				for (u32 j=0; j<(NO_HW_THREAD); j++){
-					DATA_TYPE_X x_wide = x[nv*(col_size>>2) + i];
+					DATA_TYPE_X x_wide = x[nv*(local_col_size>>2) + i];
 					x_local[j][i*4] = x_wide.range(7,0);
 					x_local[j][i*4+1] = x_wide.range(15,8);
 					x_local[j][i*4+2] = x_wide.range(23,16);
