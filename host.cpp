@@ -324,7 +324,7 @@ int main(int argc, char** argv) {
     u32 S_end = row_size;
 
     // Set the kernal argument
-	/*
+	
     int narg = 0;
     OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
@@ -338,7 +338,7 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, err = krnl.setArg(narg++, nnz));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_begin));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
-    */
+    
 
     //Map buffers to userspace pointers
     OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
@@ -369,10 +369,10 @@ int main(int argc, char** argv) {
 
 				//*(array_colIndices + line_number) = c;
 				array_colIndices[line_number] = c;
-				//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+				std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
 				//*(array_values + line_number) = v;
 				array_values[line_number] = v;
-				//std::cout << "array_values = " << array_values[line_number] << std::endl;
+				std::cout << "array_values = " << array_values[line_number] << std::endl;
 				//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 			}
@@ -383,7 +383,7 @@ int main(int argc, char** argv) {
 				//std::cout << "rowptr " << c << std::endl;
 				//*(array_rowPtr + (line_number - (nnz))) = r;
 				array_rowPtr[line_number - nnz] = r;
-				//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+				std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
 				//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 			}
 			line_number++;
@@ -391,19 +391,6 @@ int main(int argc, char** argv) {
 	}
 	std::cout << "Read data completed." << std::endl;
 	
-	int narg = 0;
-    OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
-    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
-    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_colIndices));
-    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_rowPtr));
-    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_x));
-    OCL_CHECK(err, err = krnl.setArg(narg++, no_vectors));
-    OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_y));
-    OCL_CHECK(err, err = krnl.setArg(narg++, row_size));
-    OCL_CHECK(err, err = krnl.setArg(narg++, col_size));
-    OCL_CHECK(err, err = krnl.setArg(narg++, nnz));
-    OCL_CHECK(err, err = krnl.setArg(narg++, S_begin));
-    OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
 
 	//double start_time, end_time, execution_time;
     
