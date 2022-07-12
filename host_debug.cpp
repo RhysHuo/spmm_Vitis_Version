@@ -114,13 +114,15 @@ void spmm_kernel(
 				 	std::cout << "spmm_kernel : check 06" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
-							//std::cout << "spmm_kernel : check 07" << std::endl;
+							std::cout << "spmm_kernel : check 07" << std::endl;
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
-							//std::cout << "spmm_kernel : check 08" << std::endl;
+							std::cout << "spmm_kernel : check 08" << std::endl;
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
 							ap_int<8> C_val;
 							C_val = v_val*x_temp;
+							std::cout << "spmm_kernel : check 09" << std::endl;
 							y_local += C_val;
+							std::cout << "spmm_kernel : check 10" << std::endl;
 							//std::cout << "y_local  " << y_local << std::endl;
 					}
 				 }
@@ -148,6 +150,7 @@ void spmm_kernel(
 				 }
 			}
 		} //p loop
+		std::cout << "spmm_kernel : check 11" << std::endl;
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
