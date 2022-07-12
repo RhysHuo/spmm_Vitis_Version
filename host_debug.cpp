@@ -149,13 +149,15 @@ void spmm_kernel(
 		}
 		*/
 		if (row_size_tmp == 0) {
-			y_fifo[i] = y_tmp;
+			//y_fifo[i] = y_tmp;
+			y[i] = y_tmp;
 		}
 	}
 
 	for (u32 i = 0; i < row_size; i+=1) {
 		#pragma HLS pipeline
-		y[i] = y_fifo[i];
+		//y[i] = y_fifo[i];
+		std::cout << "y[i]  " << i << " " << y[i] << std::endl;
 	}
 }
 
