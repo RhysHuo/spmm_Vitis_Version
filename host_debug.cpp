@@ -669,10 +669,10 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 {
 	for (int i = 0; i < row * col; i++) {
 		if (y_golden[i] != y[i]) {
-			if(i < 50)
-				std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
-						<< ", kernel = " << y[i] << std::endl;
-			//return 1;
+			//if(i < 50)
+			std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
+					<< ", kernel = " << y[i] << std::endl;
+			return 1;
 		}
 	}
     std::cout 	<< "TEST PASSED !" <<  std::endl;
