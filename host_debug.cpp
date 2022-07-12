@@ -81,9 +81,11 @@ void spmm_kernel(
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
+			std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 			row_size_remains = 0;
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
+			std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
 		//std::cout << "spmm_kernel : check 02" << std::endl;
@@ -143,7 +145,7 @@ void spmm_kernel(
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		//std::cout << "y_tmp  " << y_tmp << std::endl;
+		std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
