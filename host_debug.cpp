@@ -41,9 +41,11 @@ void spmm_kernel(
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
 	
-	std::cout << "columnIndex  " << *columnIndex << std::endl;
-	std::cout << "values  " << *values << std::endl;
-	std::cout << "y  " << *y << std::endl;
+	for (u32 i = 0; i < nnz; i+=1) {
+		std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
+		std::cout << "values  " << i << " " << values[i] << std::endl;
+		//std::cout << "y  " << *y << std::endl; //输出
+	}
 	/*
 	hls::stream<DATA_TYPE>       values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
