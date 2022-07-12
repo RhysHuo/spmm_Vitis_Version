@@ -46,13 +46,13 @@ void spmm_kernel(
 	u32 ci;
 	
 	
-	for (u32 i = 0; i < new_nnz; i+=1) {
-		std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
-		std::cout << "values  " << i << " " << values[i] << std::endl;
+	//for (u32 i = 0; i < new_nnz; i+=1) {
+		//std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
+		//std::cout << "values  " << i << " " << values[i] << std::endl;
 		//std::cout << "y  " << *y << std::endl; //输出
-	}
-	std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
-	std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
+	//}
+	//std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
+	//std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
 	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
@@ -94,7 +94,7 @@ void spmm_kernel(
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
-			//std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+			std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 			row_size_remains = 0;
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
@@ -166,7 +166,7 @@ void spmm_kernel(
 		y_tmp += y_local;
 		row_size_tmp -= II;
 		//std::cout << "y_local  " << y_local << std::endl;
-		//std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+		std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 		//std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
