@@ -50,9 +50,9 @@ void spmm_kernel(
 	//	std::cout << "values  " << i << " " << values[i] << std::endl;
 	//	//std::cout << "y  " << *y << std::endl; //输出
 	//}
-	//std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
-	//std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
-	//std::cout << "row_size  " << row_size << std::endl;
+	std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
+	std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
+	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
 	
@@ -488,7 +488,7 @@ void spmm(
 			
 			//std::cout << "columnIndex_3 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			//std::cout << "values_3 + first_rowPrt_value + values_offset_threads[i], = " << *(values_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
-			std::cout << "y_3 + begin + nv*row_size + row_offset_threads[i] = " << *(y_3 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
+			//std::cout << "y_3 + begin + nv*row_size + row_offset_threads[i] = " << *(y_3 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
 			
 		}
 }
