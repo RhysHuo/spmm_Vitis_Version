@@ -91,7 +91,7 @@ void spmm_kernel(
 			//std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
-		//std::cout << "spmm_kernel : check 02" << std::endl;
+		std::cout << "spmm_kernel : check 02" << std::endl;
 
 		DATA_TYPE_OUT y_local = 0;
 
@@ -148,7 +148,7 @@ void spmm_kernel(
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		//std::cout << "y_tmp  " << y_tmp << std::endl;
+		std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
@@ -157,8 +157,11 @@ void spmm_kernel(
 		*/
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
-			y[y_row++] = y_tmp;
+			y[y_row] = y_tmp;
+			std::cout << "y[y_row++]  " << y[y_row] << std::endl;
+			y_row += 1;
 		}
+		
 	}
 	/*
 	for (u32 i = 0; i < row_size; i+=1) {
