@@ -74,6 +74,7 @@ void spmm_kernel(
 	*/
 
 	u32 row_size_remains = 0;
+	int y_row = 0;
 	
 	//std::cout << "new_nnz = " << new_nnz << std::endl;
 
@@ -154,15 +155,16 @@ void spmm_kernel(
 		*/
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
-			y[i] = y_tmp;
+			y[y_row++] = y_tmp;
 		}
 	}
-
+	/*
 	for (u32 i = 0; i < row_size; i+=1) {
 		#pragma HLS pipeline
 		//y[i] = y_fifo[i];
 		std::cout << "y[i]  " << i << " " << y[i] << std::endl;
 	}
+	*/
 }
 
 void spmm(
