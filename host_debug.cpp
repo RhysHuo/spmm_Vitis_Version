@@ -94,7 +94,7 @@ void spmm_kernel(
 			//std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
-		std::cout << "spmm_kernel : check 02" << std::endl;
+		//std::cout << "spmm_kernel : check 02" << std::endl;
 
 		y_local = 0;
 
@@ -103,28 +103,28 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				std::cout << "spmm_kernel : check 03" << std::endl;
+				//std::cout << "spmm_kernel : check 03" << std::endl;
 				v = values[i];
 				std::cout << "v  =   " << i << " " << v << std::endl;
-				std::cout << "spmm_kernel : check 04" << std::endl;
+				//std::cout << "spmm_kernel : check 04" << std::endl;
 				ci = columnIndex[i];
 				std::cout << "ci  =   " << i << " " << ci << std::endl;
-				std::cout << "spmm_kernel : check 05" << std::endl;
+				//std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
-				 	std::cout << "spmm_kernel : check 06" << std::endl;
+				 	//std::cout << "spmm_kernel : check 06" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
-							std::cout << "spmm_kernel : check 07" << std::endl;
+							//std::cout << "spmm_kernel : check 07" << std::endl;
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
 							std::cout << "spmm_kernel : check 08" << std::endl;
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
 							ap_int<8> C_val;
 							C_val = v_val*x_temp;
-							std::cout << "spmm_kernel : check 09" << std::endl;
+							//std::cout << "spmm_kernel : check 09" << std::endl;
 							y_local += C_val;
-							std::cout << "spmm_kernel : check 10" << std::endl;
+							//std::cout << "spmm_kernel : check 10" << std::endl;
 							//std::cout << "y_local  " << y_local << std::endl;
 					}
 				 }
@@ -152,13 +152,13 @@ void spmm_kernel(
 				 }
 			}
 		} //p loop
-		std::cout << "spmm_kernel : check 11" << std::endl;
+		//std::cout << "spmm_kernel : check 11" << std::endl;
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		std::cout << "y_local  " << y_local << std::endl;
-		std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
-		std::cout << "y_tmp  " << y_tmp << std::endl;
+		//std::cout << "y_local  " << y_local << std::endl;
+		//std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+		//std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
