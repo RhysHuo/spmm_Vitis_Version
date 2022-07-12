@@ -466,11 +466,11 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
-			/*
-			std::cout << "columnIndex_3 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
-			std::cout << "values_3 + first_rowPrt_value + values_offset_threads[i], = " << *(values_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
+			
+			//std::cout << "columnIndex_3 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
+			//std::cout << "values_3 + first_rowPrt_value + values_offset_threads[i], = " << *(values_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "y_3 + begin + nv*row_size + row_offset_threads[i] = " << *(y_3 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
-			*/
+			
 		}
 }
 
