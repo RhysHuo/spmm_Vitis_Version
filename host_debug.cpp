@@ -46,6 +46,7 @@ void spmm_kernel(
 		std::cout << "values  " << i << " " << values[i] << std::endl;
 		//std::cout << "y  " << *y << std::endl; //输出
 	}
+	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
 	/*
@@ -56,9 +57,9 @@ void spmm_kernel(
 	hls::stream<DATA_TYPE_OUT>       y_fifo;
 	#pragma HLS STREAM variable=y_fifo depth=4 dim=1
 	*/
-	DATA_TYPE *values_fifo = values;
-	u32 *col_indices_fifo = columnIndex;
-	DATA_TYPE_OUT y_fifo;
+	//DATA_TYPE *values_fifo = values;
+	//u32 *col_indices_fifo = columnIndex;
+	//DATA_TYPE_OUT y_fifo;
 	
 	//for(int )
 	//std::cout << "spmm_kernel : check 01" << std::endl;
@@ -93,9 +94,9 @@ void spmm_kernel(
 				y_local +=  0;
 			} else {
 				//std::cout << "spmm_kernel : check 03" << std::endl;
-				DATA_TYPE v = *values_fifo;
+				DATA_TYPE v = values[i];
 				//std::cout << "spmm_kernel : check 04" << std::endl;
-				u32 ci = *col_indices_fifo;
+				u32 ci = columnIndex[i];
 				//std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
@@ -148,13 +149,13 @@ void spmm_kernel(
 		}
 		*/
 		if (row_size_tmp == 0) {
-			y_fifo == y_tmp;
+			y_fifo[i] = y_tmp;
 		}
 	}
 
 	for (u32 i = 0; i < row_size; i+=1) {
 		#pragma HLS pipeline
-		y[i] = y_fifo;
+		y[i] = y_fifo[i];
 	}
 }
 
