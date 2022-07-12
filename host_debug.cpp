@@ -426,9 +426,9 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
-			std::cout << "columnIndex_2 + first_rowPrt_value + values_offset_threads[i] = " << columnIndex_2 + first_rowPrt_value + values_offset_threads[i] << std::endl;
-			std::cout << "values_2 + first_rowPrt_value + values_offset_threads[i], = " << values_2 + first_rowPrt_value + values_offset_threads[i] << std::endl;
-			std::cout << "y_2 + begin + nv*row_size + row_offset_threads[i] = " << y_2 + begin + nv*row_size + row_offset_threads[i] << std::endl;
+			std::cout << "columnIndex_2 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_2 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
+			std::cout << "values_2 + first_rowPrt_value + values_offset_threads[i], = " << *(values_2 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
+			std::cout << "y_2 + begin + nv*row_size + row_offset_threads[i] = " << *(y_2 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
 
 			i = 3;
 			//std::cout << "check 10" << std::endl;
