@@ -44,18 +44,18 @@ void spmm_kernel(
 	DATA_TYPE v;
 	u32 ci;
 	
-	/*
-	for (u32 i = 0; i < nnz; i+=1) {
-		std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
-		std::cout << "values  " << i << " " << values[i] << std::endl;
-		//std::cout << "y  " << *y << std::endl; //输出
-	}
-	std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
-	std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
-	std::cout << "row_size  " << row_size << std::endl;
+	
+	//for (u32 i = 0; i < nnz; i+=1) {
+	//	std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
+	//	std::cout << "values  " << i << " " << values[i] << std::endl;
+	//	//std::cout << "y  " << *y << std::endl; //输出
+	//}
+	//std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
+	//std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
+	//std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
-	*/
+	
 	/*
 	hls::stream<DATA_TYPE>       values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
