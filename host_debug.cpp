@@ -46,6 +46,8 @@ void spmm_kernel(
 		std::cout << "values  " << i << " " << values[i] << std::endl;
 		//std::cout << "y  " << *y << std::endl; //输出
 	}
+	std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
+	std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
 	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
