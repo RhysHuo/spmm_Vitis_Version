@@ -320,6 +320,8 @@ void spmm(
 			row_offset_threads[i] = row_offset_threads[i-1] + row_size_threads[i-1];
 		}
 	}
+	
+	std::cout << "entering for_spmm_kernel" << std::endl;
 
 	//for (u32 i=0; i<(col_size); i++){
 	//#pragma HLS pipeline
@@ -394,6 +396,7 @@ void spmm(
 			//std::cout << "check 07" << std::endl;
 			i = 0;
 			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			std::cout << "entering spmm_kernel_i0" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -414,6 +417,7 @@ void spmm(
 			*/
 			i = 1;
 			//std::cout << "check 08" << std::endl;
+			std::cout << "entering spmm_kernel_i1" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -434,6 +438,7 @@ void spmm(
 			*/
 			i = 2;
 			//std::cout << "check 09" << std::endl;
+			std::cout << "entering spmm_kernel_i2" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -454,6 +459,7 @@ void spmm(
 			*/
 			i = 3;
 			//std::cout << "check 10" << std::endl;
+			std::cout << "entering spmm_kernel_i3" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -492,6 +498,7 @@ void spmm_block(
 		) {
 
     //#pragma SDS resource(1)
+    std::cout << "entering spmm" << std::endl;
 	spmm(
 			ternary,
 			rowPtr,
