@@ -31,7 +31,8 @@ void spmm_kernel(
 		DATA_TYPE *x_local,
 		u32 row_size,
 		u32 nnz,
-		u32 new_nnz
+		u32 new_nnz,
+		u32 last_section
 ) {
 
 	#pragma HLS DATAFLOW
@@ -82,8 +83,13 @@ void spmm_kernel(
 	int y_row = 0;
 	
 	//std::cout << "new_nnz = " << new_nnz << std::endl;
+	
+	if(last_section)
+		u32 local_nnz = nnz;
+	else
+		u32 local_nnz = new_nnz;
 
-	for (u32 i = 0; i < new_nnz; i+=II) {
+	for (u32 i = 0; i < local_nnz; i+=II) {
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
@@ -103,7 +109,7 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				if(i < nnz) {
+				//if(i < nnz) {
 					//std::cout << "spmm_kernel : check 03" << std::endl;
 					v = values[i];
 					//std::cout << "v  =   " << i << " " << v << std::endl;
@@ -151,7 +157,7 @@ void spmm_kernel(
 								y_local += C_val;
 						}
 					 }
-				 }
+				 //}
 			}
 		} //p loop
 		//std::cout << "spmm_kernel : check 11" << std::endl;
@@ -408,6 +414,7 @@ void spmm(
 			
 
 			u32 i;
+			u32 last_section = 0;
 			//std::cout << "check 07" << std::endl;
 			i = 0;
 			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
@@ -424,7 +431,8 @@ void spmm(
 					x_local[i],
 					row_size_threads[i],
 					nnz_threads[i],
-					new_nnz_threads[i]
+					new_nnz_threads[i],
+					last_section
 			);
 			/*
 			std::cout << "columnIndex_0 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_0 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
@@ -447,7 +455,8 @@ void spmm(
 					x_local[i],
 					row_size_threads[i],
 					nnz_threads[i],
-					new_nnz_threads[i]
+					new_nnz_threads[i],
+					last_section
 			);
 			/*
 			std::cout << "columnIndex_1 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_1 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
@@ -470,7 +479,8 @@ void spmm(
 					x_local[i],
 					row_size_threads[i],
 					nnz_threads[i],
-					new_nnz_threads[i]
+					new_nnz_threads[i],
+					last_section
 			);
 			/*
 			std::cout << "columnIndex_2 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_2 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
@@ -479,6 +489,7 @@ void spmm(
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			*/
 			i = 3;
+			last_section = 1;
 			//std::cout << "check 10" << std::endl;
 			std::cout << "entering spmm_kernel_i3" << std::endl;
 			std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
@@ -493,7 +504,8 @@ void spmm(
 					x_local[i],
 					row_size_threads[i],
 					nnz_threads[i],
-					new_nnz_threads[i]
+					new_nnz_threads[i],
+					last_section
 			);
 			
 			//std::cout << "columnIndex_3 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
