@@ -84,13 +84,14 @@ void spmm_kernel(
 	
 	//std::cout << "new_nnz = " << new_nnz << std::endl;
 	u32 local_nnz = 0;
-	
+	/*
 	if(last_section)
 		local_nnz = nnz;
 	else
 		local_nnz = new_nnz;
+	*/
 
-	for (u32 i = 0; i < local_nnz; i+=II) {
+	for (u32 i = 0; i < new_nnz; i+=II) {
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
@@ -112,10 +113,16 @@ void spmm_kernel(
 			} else {
 				//if(i < nnz) {
 					//std::cout << "spmm_kernel : check 03" << std::endl;
-					v = values[i];
-					//std::cout << "v  =   " << i << " " << v << std::endl;
-					//std::cout << "spmm_kernel : check 04" << std::endl;
-					ci = columnIndex[i];
+					if(last_section){
+						v = 0;
+						ci++;
+					}
+					else{
+						v = values[i];
+						//std::cout << "v  =   " << i << " " << v << std::endl;
+						//std::cout << "spmm_kernel : check 04" << std::endl;
+						ci = columnIndex[i];
+					}
 					//std::cout << "ci  =   " << i << " " << ci << std::endl;
 					//std::cout << "spmm_kernel : check 05" << std::endl;
 					//y_local +=  v*x_local[ci];
@@ -162,7 +169,8 @@ void spmm_kernel(
 			}
 		} //p loop
 		//std::cout << "spmm_kernel : check 11" << std::endl;
-
+		
+		std::cout << "y_local  " << y_local << std::endl;
 		y_tmp += y_local;
 		row_size_tmp -= II;
 		//std::cout << "y_local  " << y_local << std::endl;
