@@ -955,11 +955,11 @@ int main(int argc, char** argv) {
         return 1;
 
 	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_values, array_values));
-    //OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_colIndices, array_colIndices));
-	//OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_rowPtr, array_rowPtr));
+    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_colIndices, array_colIndices));
+	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_rowPtr, array_rowPtr));
 	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_x, array_x));
     OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_y, array_y));
-    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_y_golden, array_y_golden));
+    //OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_y_golden, array_y_golden));
 	q.finish();
 
 }
