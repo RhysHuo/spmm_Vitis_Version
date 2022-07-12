@@ -105,10 +105,10 @@ void spmm_kernel(
 			} else {
 				//std::cout << "spmm_kernel : check 03" << std::endl;
 				v = values[i];
-				std::cout << "v  =   " << i << " " << v << std::endl;
+				//std::cout << "v  =   " << i << " " << v << std::endl;
 				//std::cout << "spmm_kernel : check 04" << std::endl;
 				ci = columnIndex[i];
-				std::cout << "ci  =   " << i << " " << ci << std::endl;
+				//std::cout << "ci  =   " << i << " " << ci << std::endl;
 				//std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
@@ -118,7 +118,7 @@ void spmm_kernel(
 							ap_int<8> v_val = v.range(z+7,z);
 							//std::cout << "spmm_kernel : check 07" << std::endl;
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
-							std::cout << "spmm_kernel : check 08" << std::endl;
+							//std::cout << "spmm_kernel : check 08" << std::endl;
 							//y_local +=  v_val*x_local[ci].range(z+7,z);
 							ap_int<8> C_val;
 							C_val = v_val*x_temp;
