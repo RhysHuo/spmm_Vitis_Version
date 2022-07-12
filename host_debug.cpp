@@ -40,6 +40,9 @@ void spmm_kernel(
 
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
+	DATA_TYPE_OUT y_local = 0;
+	DATA_TYPE v;
+	u32 ci;
 	
 	/*
 	for (u32 i = 0; i < nnz; i+=1) {
@@ -91,24 +94,24 @@ void spmm_kernel(
 			//std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
-		//std::cout << "spmm_kernel : check 02" << std::endl;
+		std::cout << "spmm_kernel : check 02" << std::endl;
 
-		DATA_TYPE_OUT y_local = 0;
+		y_local = 0;
 
 		for (u32 p = 0; p < II; p++) {
 			row_size_remains++;
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				//std::cout << "spmm_kernel : check 03" << std::endl;
-				DATA_TYPE v = values[i];
-				//std::cout << "spmm_kernel : check 04" << std::endl;
-				u32 ci = columnIndex[i];
-				//std::cout << "spmm_kernel : check 05" << std::endl;
+				std::cout << "spmm_kernel : check 03" << std::endl;
+				v = values[i];
+				std::cout << "spmm_kernel : check 04" << std::endl;
+				ci = columnIndex[i];
+				std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
-				 	//std::cout << "spmm_kernel : check 06" << std::endl;
+				 	std::cout << "spmm_kernel : check 06" << std::endl;
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
 							ap_int<8> v_val = v.range(z+7,z);
 							//std::cout << "spmm_kernel : check 07" << std::endl;
