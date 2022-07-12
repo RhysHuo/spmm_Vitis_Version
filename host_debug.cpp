@@ -252,7 +252,7 @@ void spmm(
 		u32 j = 0;
 		u32 prev_index = first_rowPrt_value; //前一个rowPtr
 		//std::cout << "rowPtr[0] = " << rowPtr[0] << std::endl;
-		std::cout << "prev_index = " << prev_index << std::endl;
+		//std::cout << "prev_index = " << prev_index << std::endl;
 		
 		u32 k = 0;
 		
@@ -261,9 +261,9 @@ void spmm(
 		for (u32 i = 0; i < end-begin; i++) {
 			#pragma HLS PIPELINE
 			u32 current_index= rowPtr[i+begin+1]; //当前rowPtr
-			std::cout << "current_index = " << current_index << std::endl;
+			//std::cout << "current_index = " << current_index << std::endl;
 			u32 rs = (current_index - prev_index); //当前行中所包含的非零值的数量
-			std::cout << "rs = " << rs << std::endl;
+			//std::cout << "rs = " << rs << std::endl;
 
 			if (rs == 0) { //当前行中所有值都为零
 				nrs = II; //II = 4
@@ -279,7 +279,7 @@ void spmm(
 			//std::cout << "check 03" << std::endl;
 
 			u32 t = nnz_threads[j] + rs; //t 检测当前分区所有行的非零值数量是否达到了理想的数量
-			std::cout << "t = " << t << std::endl;
+			//std::cout << "t = " << t << std::endl;
 			prev_index = current_index; //下一次运行
 
 			if (t < ideal_nnz) { //没有达到，继续储存
@@ -873,10 +873,10 @@ int main(int argc, char** argv) {
 
 				//*(array_colIndices + line_number) = c;
 				array_colIndices[line_number] = c;
-				std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+				//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
 				//*(array_values + line_number) = v;
 				array_values[line_number] = v;
-				std::cout << "array_values = " << array_values[line_number] << std::endl;
+				//std::cout << "array_values = " << array_values[line_number] << std::endl;
 				//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 			}
@@ -887,7 +887,7 @@ int main(int argc, char** argv) {
 				//std::cout << "rowptr " << c << std::endl;
 				//*(array_rowPtr + (line_number - (nnz))) = r;
 				array_rowPtr[line_number - nnz] = r;
-				std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+				//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
 				//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 			}
 			line_number++;
