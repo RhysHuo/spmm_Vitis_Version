@@ -145,7 +145,7 @@ void spmm_kernel(
 
 	for (u32 i = 0; i < row_size; i+=1) {
 		#pragma HLS pipeline
-		y[i] = y_fifo.read();
+		y[i] = y_fifo;
 	}
 }
 
@@ -328,7 +328,7 @@ void spmm(
 		//if(!ternary)
 		//{
 		
-		std::cout << "check 06" << std::endl;
+		//std::cout << "check 06" << std::endl;
 		
 			for (u32 i=0; i<(col_size>>2); i++){
 				#pragma HLS pipeline
@@ -359,6 +359,7 @@ void spmm(
 
 
 //=======================================================================================
+/*
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			for(int i = 0; i < 4; i++){
 				std::cout << "row_size_threads = " << row_size_threads[i] << std::endl;
@@ -366,10 +367,11 @@ void spmm(
 				std::cout << "new_nnz_threads = " << new_nnz_threads[i] << std::endl;
 				std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			}
+			*/
 			
 
 			u32 i;
-			std::cout << "check 07" << std::endl;
+			//std::cout << "check 07" << std::endl;
 			i = 0;
 			spmm_kernel(
 					ternary,
@@ -385,7 +387,7 @@ void spmm(
 			);
 			
 			i = 1;
-			std::cout << "check 08" << std::endl;
+			//std::cout << "check 08" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -400,7 +402,7 @@ void spmm(
 			);
 
 			i = 2;
-			std::cout << "check 09" << std::endl;
+			//std::cout << "check 09" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -415,7 +417,7 @@ void spmm(
 			);
 
 			i = 3;
-			std::cout << "check 10" << std::endl;
+			//std::cout << "check 10" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -628,7 +630,7 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 		if (y_golden[i] != y[i]) {
 			std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
 						<< ", kernel = " << y[i] << std::endl;
-			return 1;
+			//return 1;
 		}
 	}
     std::cout 	<< "TEST PASSED !" <<  std::endl;
@@ -717,16 +719,14 @@ int main(int argc, char** argv) {
 	fp_input = fopen(argv[2], "r");
     //fp_input = argv[2];
     ap_uint<2> S_ternary = atoi(argv[3]);
-	
-	int flag = 1;
 
 	u32 r;
 	u32 c;
 	DATA_TYPE v;
-	
-	DATA_TYPE *array_values;
-	u32* array_colIndices;
-	u32* array_rowPtr;
+
+    DATA_TYPE *array_values;
+    u32* array_colIndices;
+    u32* array_rowPtr;
 
     u32 row_size;
     u32 col_size;
@@ -734,66 +734,30 @@ int main(int argc, char** argv) {
 
 	if (fp_input != NULL) {
         //std::cout << "read_mtx_spmm: check point 2" << std::endl;
-		char line[1000];
+		char line_1[1000];
 	//std::cout << "has defined a char line[1000]" << std::endl;
-        while (fgets(line, sizeof(line), fp_input) != NULL) {
-		//std::cout << "has entered while" << std::endl;
-			if (line[0] != '%') {
+		if(fgets(line_1, sizeof(line_1), fp_input) != NULL){
+			sscanf(line_1, "%u %u %u", &row_size, &col_size, &nnz);
+			//std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
+		}
+		
+		/*
+        	while (fgets(line_1, sizeof(line_1), fp_input) != NULL) {
+			//std::cout << "has entered while" << std::endl;
+			if (line_1[0] != '%') {
 				//std::cout << "has entered if, start to sscanf" << std::endl;
-				sscanf(line, "%u %u %u", &row_size, &col_size, &nnz);
-                //std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
-                std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
-                //std::cout << "read_mtx_spmm: check point 3" << std::endl;
-				
-				if(flag)
-				{
-					array_values = new DATA_TYPE[nnz];
-					array_colIndices = new u32[nnz];
-					array_rowPtr = new u32[row_size + 1];
-					flag = 0;
-				}
-				
-		u32 line_number = 0;
-                while (fgets(line, sizeof(line), fp_input) != NULL) {
-					if (line_number < nnz) {
-						//std::cout << "has entered if, start to sscanf" << std::endl;
-						sscanf(line, "%d %d", &c, &v);
-
-						//printf("colindices %d val %f\n", c, v);
-						//std::cout << "colindices" << c << " val " << v << std::endl;
-
-						//*(array_colIndices + line_number) = c;
-						array_colIndices[line_number] = c;
-						//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
-						//*(array_values + line_number) = v;
-						array_values[line_number] = v;
-						//std::cout << "array_values = " << array_values[line_number] << std::endl;
-						//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
-
-					}
-					else {
-						sscanf(line, "%d", &r);
-
-						//printf("rowptr %d \n", r);
-						//std::cout << "rowptr " << c << std::endl;
-						//*(array_rowPtr + (line_number - (nnz))) = r;
-						array_rowPtr[line_number - nnz] = r;
-						//std::cout << "array_rowPtr = " << (line_number - nnz) << " " << array_rowPtr[line_number - nnz] << std::endl;
-						//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
-					}
-					line_number++;
-				}
+				sscanf(line_1, "%u %u %u", &row_size, &col_size, &nnz);
+				//std::cout << "row_size = " <<  *row_size << " col_size = " << *col_size << " nnz = " << *nnz << std::endl;
+				std::cout << "row_size = " <<  row_size << " col_size = " << col_size << " nnz = " << nnz << std::endl;
+				//std::cout << "read_mtx_spmm: check point 3" << std::endl;
 			}
 		}
+		*/
 	}
 	else {
 		//perror(argv[1]); //print the error message on stderr.
 		std::cout << "Error with input file name" << std::endl;
 		exit(EXIT_FAILURE);
-	}
-	
-	for(int i = 0; i < 65; i++){
-		std::cout << "array_rowPtr = " << i << " " << array_rowPtr[i] << std::endl;
 	}
 
     u32 no_vectors = 512;
@@ -802,27 +766,29 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, cl::Buffer buffer_array_values(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(DATA_TYPE), NULL, &err));
     OCL_CHECK(err, cl::Buffer buffer_array_colIndices(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , nnz * sizeof(u32), NULL, &err));    
     OCL_CHECK(err, cl::Buffer buffer_array_rowPtr(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , (row_size + 1) * sizeof(u32), NULL, &err));
-    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
+    //OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X)/4, NULL, &err));
+    OCL_CHECK(err, cl::Buffer buffer_array_x(context, CL_MEM_READ_ONLY | CL_MEM_ALLOC_HOST_PTR , col_size * no_vectors * sizeof(DATA_TYPE_X), NULL, &err));
     OCL_CHECK(err, cl::Buffer buffer_array_y(context, CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR , row_size * no_vectors * sizeof(DATA_TYPE_OUT), NULL, &err));
 
 	// For buffer buffer_array_y_golden, since we aren't using it for a kernel we'll specify the bank allocation
+	/*
     cl_mem_ext_ptr_t bank_ext;
     bank_ext.flags = 0 | XCL_MEM_TOPOLOGY;
     bank_ext.obj   = NULL;
     bank_ext.param = 0;
 	OCL_CHECK(err, cl::Buffer buffer_array_y_golden(context, CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR | CL_MEM_EXT_PTR_XILINX, row_size * no_vectors * sizeof(DATA_TYPE_OUT), &bank_ext, &err));
-
+	*/
     DATA_TYPE_X *array_x;
     DATA_TYPE_OUT *array_y;
-    DATA_TYPE_OUT * array_y_golden;
+    DATA_TYPE_OUT * array_y_golden = new DATA_TYPE_OUT[row_size * no_vectors];
 
     u32 S_begin = 0;
     u32 S_end = row_size;
 
     // Set the kernal argument
-	/*
+	
     int narg = 0;
-	OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
+    OCL_CHECK(err, err = krnl.setArg(narg++, S_ternary));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_values));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_colIndices));
     OCL_CHECK(err, err = krnl.setArg(narg++, buffer_array_rowPtr));
@@ -834,25 +800,63 @@ int main(int argc, char** argv) {
     OCL_CHECK(err, err = krnl.setArg(narg++, nnz));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_begin));
     OCL_CHECK(err, err = krnl.setArg(narg++, S_end));
-	*/
+    
 
     //Map buffers to userspace pointers
     OCL_CHECK(err, array_values = (DATA_TYPE*)q.enqueueMapBuffer(buffer_array_values, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(DATA_TYPE), nullptr, nullptr, &err));
-    //OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
-    //OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
-    OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
+    OCL_CHECK(err, array_colIndices = (u32*)q.enqueueMapBuffer(buffer_array_colIndices, CL_TRUE, CL_MAP_WRITE, 0, nnz * sizeof(u32), nullptr, nullptr, &err));
+    OCL_CHECK(err, array_rowPtr = (u32*)q.enqueueMapBuffer(buffer_array_rowPtr, CL_TRUE, CL_MAP_WRITE, 0, (row_size + 1) * sizeof(u32), nullptr, nullptr, &err));
+    //OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X)/4, nullptr, nullptr, &err));
+	OCL_CHECK(err, array_x = (DATA_TYPE_X*)q.enqueueMapBuffer(buffer_array_x, CL_TRUE, CL_MAP_WRITE, 0, col_size * no_vectors * sizeof(DATA_TYPE_X), nullptr, nullptr, &err));
 	OCL_CHECK(err, array_y = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y, CL_TRUE, CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
-	OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
-
+	//OCL_CHECK(err, array_y_golden = (DATA_TYPE_OUT*)q.enqueueMapBuffer(buffer_array_y_golden, CL_TRUE, CL_MAP_WRITE | CL_MAP_READ, 0, row_size * no_vectors * sizeof(DATA_TYPE_OUT), nullptr, nullptr, &err));
+	
     //Initialization
-	std::cout << "Start to init_array " << std::endl;
+    std::cout << "Start to init_array " << std::endl;
 
     init_array(S_ternary, array_x, no_vectors, col_size);
+	
+	std::cout << "init_array completed." << std::endl;
+	
+	if (fp_input != NULL) {
+		char line_2[1000];
+		u32 line_number = 0;
+                while (fgets(line_2, sizeof(line_2), fp_input) != NULL) {
+			if (line_number < nnz) {
+				//std::cout << "has entered if, start to sscanf" << std::endl;
+				sscanf(line_2, "%d %d", &c, &v);
+
+				//printf("colindices %d val %f\n", c, v);
+				//std::cout << "colindices" << c << " val " << v << std::endl;
+
+				//*(array_colIndices + line_number) = c;
+				array_colIndices[line_number] = c;
+				std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+				//*(array_values + line_number) = v;
+				array_values[line_number] = v;
+				std::cout << "array_values = " << array_values[line_number] << std::endl;
+				//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
+
+			}
+			else {
+				sscanf(line_2, "%d", &r);
+
+				//printf("rowptr %d \n", r);
+				//std::cout << "rowptr " << c << std::endl;
+				//*(array_rowPtr + (line_number - (nnz))) = r;
+				array_rowPtr[line_number - nnz] = r;
+				std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+				//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
+			}
+			line_number++;
+		}
+	}
+	std::cout << "Read data completed." << std::endl;
 
 	//double start_time, end_time, execution_time;
 	std::cout << "Start to kernel : spmm_block " << std::endl;
 	
-	std::cout << "array_rowPtr[S_begin] = " << array_rowPtr[S_begin] << std::endl;
+	//std::cout << "array_rowPtr[S_begin] = " << array_rowPtr[S_begin] << std::endl;
 
     spmm_block(
 		S_ternary,
