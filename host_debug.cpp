@@ -148,7 +148,9 @@ void spmm_kernel(
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		//std::cout << "y_tmp  " << y_tmp << std::endl;
+		std::cout << "y_local  " << y_local << std::endl;
+		std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+		std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
