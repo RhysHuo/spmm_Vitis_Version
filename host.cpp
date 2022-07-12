@@ -165,11 +165,11 @@ void init_array(ap_uint<2> ternary, DATA_TYPE_X *x, u32 row, u32 col)
 static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 col)
 {
 	for (int i = 0; i < row * col; i++) {
-		//if (y_golden[i] != y[i]) {
+		if (y_golden[i] != y[i]) {
 			std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
 						<< ", kernel = " << y[i] << std::endl;
-			//return 1;
-		//}
+			return 1;
+		}
 	}
     std::cout 	<< "TEST PASSED !" <<  std::endl;
 	return 0;
