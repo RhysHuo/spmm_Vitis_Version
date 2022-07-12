@@ -83,11 +83,12 @@ void spmm_kernel(
 	int y_row = 0;
 	
 	//std::cout << "new_nnz = " << new_nnz << std::endl;
+	u32 local_nnz = 0;
 	
 	if(last_section)
-		u32 local_nnz = nnz;
+		local_nnz = nnz;
 	else
-		u32 local_nnz = new_nnz;
+		local_nnz = new_nnz;
 
 	for (u32 i = 0; i < local_nnz; i+=II) {
 		#pragma HLS pipeline
