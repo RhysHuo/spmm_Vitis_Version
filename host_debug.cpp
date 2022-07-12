@@ -41,6 +41,7 @@ void spmm_kernel(
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
 	
+	/*
 	for (u32 i = 0; i < nnz; i+=1) {
 		std::cout << "columnIndex  " << i << " " << columnIndex[i] << std::endl;
 		std::cout << "values  " << i << " " << values[i] << std::endl;
@@ -51,6 +52,7 @@ void spmm_kernel(
 	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
+	*/
 	/*
 	hls::stream<DATA_TYPE>       values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
@@ -82,11 +84,11 @@ void spmm_kernel(
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
-			std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+			//std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 			row_size_remains = 0;
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
-			std::cout << "row_counter  " << row_counter << std::endl;
+			//std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
 		//std::cout << "spmm_kernel : check 02" << std::endl;
@@ -146,7 +148,7 @@ void spmm_kernel(
 
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		std::cout << "y_tmp  " << y_tmp << std::endl;
+		//std::cout << "y_tmp  " << y_tmp << std::endl;
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
