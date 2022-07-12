@@ -46,6 +46,8 @@ void spmm_kernel(
 		std::cout << "values  " << i << " " << values[i] << std::endl;
 		//std::cout << "y  " << *y << std::endl; //输出
 	}
+	std::cout << "nnz  " << nnz << std::endl;
+	std::cout << "new_nnz  " << new_nnz << std::endl;
 	/*
 	hls::stream<DATA_TYPE>       values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=4 dim=1
@@ -380,7 +382,7 @@ void spmm(
 			u32 i;
 			//std::cout << "check 07" << std::endl;
 			i = 0;
-			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -393,10 +395,12 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
+			/*
 			std::cout << "columnIndex_0 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_0 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "values_0 + first_rowPrt_value + values_offset_threads[i], = " << *(values_0 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "y_0 + begin + nv*row_size + row_offset_threads[i] = " << *(y_0 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			*/
 			i = 1;
 			//std::cout << "check 08" << std::endl;
 			spmm_kernel(
@@ -411,10 +415,12 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
+			/*
 			std::cout << "columnIndex_1 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_1 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "values_1 + first_rowPrt_value + values_offset_threads[i], = " << *(values_1 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "y_1 + begin + nv*row_size + row_offset_threads[i] = " << *(y_1 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			*/
 			i = 2;
 			//std::cout << "check 09" << std::endl;
 			spmm_kernel(
@@ -429,10 +435,12 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
+			/*
 			std::cout << "columnIndex_2 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_2 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "values_2 + first_rowPrt_value + values_offset_threads[i], = " << *(values_2 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "y_2 + begin + nv*row_size + row_offset_threads[i] = " << *(y_2 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			*/
 			i = 3;
 			//std::cout << "check 10" << std::endl;
 			spmm_kernel(
@@ -447,9 +455,11 @@ void spmm(
 					nnz_threads[i],
 					new_nnz_threads[i]
 			);
+			/*
 			std::cout << "columnIndex_3 + first_rowPrt_value + values_offset_threads[i] = " << *(columnIndex_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "values_3 + first_rowPrt_value + values_offset_threads[i], = " << *(values_3 + first_rowPrt_value + values_offset_threads[i]) << std::endl;
 			std::cout << "y_3 + begin + nv*row_size + row_offset_threads[i] = " << *(y_3 + begin + nv*row_size + row_offset_threads[i]) << std::endl;
+			*/
 		}
 }
 
