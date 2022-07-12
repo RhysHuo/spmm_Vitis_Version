@@ -40,7 +40,7 @@ SOFTWARE.
  */
 //const static int II = 4;
 
-const static int II = 10;
+const static int II = 1;
 
 const static int NO_HW_THREAD = 4;
 
