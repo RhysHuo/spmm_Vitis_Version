@@ -56,7 +56,7 @@ void spmm_kernel(
 	//}
 	//std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
 	//std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
-	if(counter < 12){
+	if(counter < 65){
 	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
@@ -101,12 +101,12 @@ void spmm_kernel(
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
-			if(counter < 12)
+			if(counter < 65)
 			std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 			row_size_remains = 0;
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
-			if(counter < 12)
+			if(counter < 65)
 			std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
@@ -116,7 +116,7 @@ void spmm_kernel(
 
 		for (u32 p = 0; p < II; p++) {
 			row_size_remains++;
-			if(counter < 12)
+			if(counter < 65)
 			std::cout << "row_size_remains  " << row_size_remains << std::endl;
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
@@ -132,7 +132,7 @@ void spmm_kernel(
 					//std::cout << "spmm_kernel : check 04" << std::endl;
 					ci = columnIndex[index_counter++];
 				}
-				if((counter < 12)){
+				if((counter < 65)){
 				std::cout << "v  =   " << i+p << " " << v << std::endl;
 				std::cout << "ci  =   " << i+p << " " << ci << std::endl;
 				}
@@ -185,7 +185,7 @@ void spmm_kernel(
 		//std::cout << "y_local  " << y_local << std::endl;
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		if(counter < 12){
+		if(counter < 65){
 		std::cout << "y_local  " << y_local << std::endl;
 		std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 		std::cout << "y_tmp  " << y_tmp << std::endl;
@@ -199,7 +199,7 @@ void spmm_kernel(
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
 			y[y_row] = y_tmp;
-			if(counter < 12){
+			if(counter < 65){
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "y[y_row]  " << y_row << " " << counter << " " << y[y_row] << std::endl;
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
@@ -447,7 +447,7 @@ void spmm(
 			//std::cout << "check 07" << std::endl;
 			i = 0;
 			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
-			if(counter < 12){
+			if(counter < 65){
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i0" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
@@ -475,7 +475,7 @@ void spmm(
 			*/
 			i = 1;
 			//std::cout << "check 08" << std::endl;
-			if(counter < 12){
+			if(counter < 65){
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i1" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
@@ -503,7 +503,7 @@ void spmm(
 			*/
 			i = 2;
 			//std::cout << "check 09" << std::endl;
-			if(counter < 12){
+			if(counter < 65){
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i2" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
@@ -532,7 +532,7 @@ void spmm(
 			i = 3;
 			last_section = 1;
 			//std::cout << "check 10" << std::endl;
-			if(counter < 12){
+			if(counter < 65){
 			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i3" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
