@@ -72,8 +72,7 @@ void spmm_kernel(
 	DATA_TYPE *x_local,
 	u32 row_size,
 	u32 nnz,
-	u32 new_nnz,
-	u32 last_section
+	u32 new_nnz
 );
 
 void spmm(
