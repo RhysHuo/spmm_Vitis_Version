@@ -764,11 +764,11 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 
 static int result_show(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 col)
 {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < row; j++) {
-			std::cout 	<< "data index= " << j+i*row << " golden = " << y_golden[j*col+i]
-					<< ", kernel = " << y[j*col+i] << std::endl;
-		}
+	for (int i = 0; i < 2*row; i++) {
+		
+		std::cout 	<< "data index= " << i << " golden = " << y_golden[i]
+				<< ", kernel = " << y[i] << std::endl;
+
 	}
 }
 
