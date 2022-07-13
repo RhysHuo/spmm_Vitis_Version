@@ -128,51 +128,51 @@ void spmm_kernel(
 					//std::cout << "spmm_kernel : check 04" << std::endl;
 					ci = columnIndex[p];
 				}
-					if((counter < 12) && (p == 0)){
-					std::cout << "v  =   " << p << " " << v << std::endl;
-					std::cout << "ci  =   " << p << " " << ci << std::endl;
+				if((counter < 12)){
+				std::cout << "v  =   " << p << " " << v << std::endl;
+				std::cout << "ci  =   " << p << " " << ci << std::endl;
+				}
+				//std::cout << "spmm_kernel : check 05" << std::endl;
+				//y_local +=  v*x_local[ci];
+				 if(ternary == 0)
+				 {
+					//std::cout << "spmm_kernel : check 06" << std::endl;
+					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
+							ap_int<8> v_val = v.range(z+7,z);
+							//std::cout << "spmm_kernel : check 07" << std::endl;
+							ap_int<8> x_temp = x_local[ci].range(z+7,z);
+							//std::cout << "spmm_kernel : check 08" << std::endl;
+							//y_local +=  v_val*x_local[ci].range(z+7,z);
+							ap_int<8> C_val;
+							C_val = v_val*x_temp;
+							//std::cout << "spmm_kernel : check 09" << std::endl;
+							y_local += C_val;
+							//std::cout << "spmm_kernel : check 10" << std::endl;
+							//std::cout << "y_local  " << y_local << std::endl;
 					}
-					//std::cout << "spmm_kernel : check 05" << std::endl;
-					//y_local +=  v*x_local[ci];
-					 if(ternary == 0)
-					 {
-						//std::cout << "spmm_kernel : check 06" << std::endl;
-						for(int z = 0; z < DTYPE_LENGTH; z+=8) {
-								ap_int<8> v_val = v.range(z+7,z);
-								//std::cout << "spmm_kernel : check 07" << std::endl;
-								ap_int<8> x_temp = x_local[ci].range(z+7,z);
-								//std::cout << "spmm_kernel : check 08" << std::endl;
-								//y_local +=  v_val*x_local[ci].range(z+7,z);
-								ap_int<8> C_val;
-								C_val = v_val*x_temp;
-								//std::cout << "spmm_kernel : check 09" << std::endl;
-								y_local += C_val;
-								//std::cout << "spmm_kernel : check 10" << std::endl;
-								//std::cout << "y_local  " << y_local << std::endl;
-						}
-					 }
-					 else if (ternary == 1)
-					 {
-						for(int z = 0; z < DTYPE_LENGTH; z+=2) {
+				 }
+				 else if (ternary == 1)
+				 {
+					for(int z = 0; z < DTYPE_LENGTH; z+=2) {
 
-								ap_int<2> v_val = v.range(z+1,z);
-								ap_int<2> x_temp = x_local[ci].range(z+1,z);
-								ap_int<2> C_val;
-								C_val = v_val*x_temp;
-								y_local += C_val;
-						}
-					 }
-					 else
-					 {
-						for(int z = 0; z < DTYPE_LENGTH; z+=4) {
+							ap_int<2> v_val = v.range(z+1,z);
+							ap_int<2> x_temp = x_local[ci].range(z+1,z);
+							ap_int<2> C_val;
+							C_val = v_val*x_temp;
+							y_local += C_val;
+					}
+				 }
+				 else
+				 {
+					for(int z = 0; z < DTYPE_LENGTH; z+=4) {
 
-								ap_int<4> v_val = v.range(z+3,z);
-								ap_int<4> x_temp = x_local[ci].range(z+3,z);
-								ap_int<4> C_val;
-								C_val = v_val*x_temp;
-								y_local += C_val;
-						}
-					 }
+							ap_int<4> v_val = v.range(z+3,z);
+							ap_int<4> x_temp = x_local[ci].range(z+3,z);
+							ap_int<4> C_val;
+							C_val = v_val*x_temp;
+							y_local += C_val;
+					}
+				 }
 				 //}
 			}
 		} //p loop
