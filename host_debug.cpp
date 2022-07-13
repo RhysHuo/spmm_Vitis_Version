@@ -121,17 +121,17 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
-				if(last_section && (i >= nnz)) {
+				//if(last_section && (i >= nnz)) {
 					//std::cout << "spmm_kernel : check 03" << std::endl;
-					v = 0;
-					ci++;
-				}
-				else{
+					//v = 0;
+					//ci++;
+				//}
+				//else{
 					v = values[index_counter];
 					//std::cout << "v  =   " << i << " " << v << std::endl;
 					//std::cout << "spmm_kernel : check 04" << std::endl;
 					ci = columnIndex[index_counter++];
-				}
+				//}
 				if((counter < 65)){
 				std::cout << "v  =   " << i+p << " " << v << std::endl;
 				std::cout << "ci  =   " << i+p << " " << ci << std::endl;
