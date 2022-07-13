@@ -439,11 +439,13 @@ void spmm(
 			u32 last_section = 0;
 			//std::cout << "check 07" << std::endl;
 			i = 0;
-			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			if(counter < 12){
 			std::cout << "entering spmm_kernel_i0" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
 			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
+			}
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -465,10 +467,13 @@ void spmm(
 			*/
 			i = 1;
 			//std::cout << "check 08" << std::endl;
+			if(counter < 12){
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i1" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
 			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
+			}
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -490,10 +495,13 @@ void spmm(
 			*/
 			i = 2;
 			//std::cout << "check 09" << std::endl;
+			if(counter < 12){
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i2" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
 			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
+			}
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -516,10 +524,13 @@ void spmm(
 			i = 3;
 			last_section = 1;
 			//std::cout << "check 10" << std::endl;
+			if(counter < 12){
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i3" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
 			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
+			}
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -738,7 +749,7 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 	for (int i = 0; i < row * col; i++) {
 		if (y_golden[i] != y[i]) {
 			if(i < 100)
-			std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
+			//std::cout 	<< "Mismatch: data index= " << i << " golden = " << y_golden[i]
 					<< ", kernel = " << y[i] << std::endl;
 			//return 1;
 		}
