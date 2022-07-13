@@ -105,7 +105,8 @@ void spmm_kernel(
 			row_size_remains = 0;
 			y_tmp = 0;
 			row_counter	= rowSize_local_rs[j++];
-			//std::cout << "row_counter  " << row_counter << std::endl;
+			if(counter < 12)
+			std::cout << "row_counter  " << row_counter << std::endl;
 		}
 		
 		//std::cout << "spmm_kernel : check 02" << std::endl;
@@ -114,6 +115,8 @@ void spmm_kernel(
 
 		for (u32 p = 0; p < II; p++) {
 			row_size_remains++;
+			if(counter < 12)
+			std::cout << "row_size_remains  " << row_size_remains << std::endl;
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
