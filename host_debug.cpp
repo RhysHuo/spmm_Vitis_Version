@@ -128,7 +128,7 @@ void spmm_kernel(
 					//std::cout << "spmm_kernel : check 04" << std::endl;
 					ci = columnIndex[i];
 				}
-					if(counter < 12){
+					if((counter < 12) && (p == 0)){
 					std::cout << "v  =   " << i << " " << v << std::endl;
 					std::cout << "ci  =   " << i << " " << ci << std::endl;
 					}
