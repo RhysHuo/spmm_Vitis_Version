@@ -46,7 +46,7 @@ void spmm_kernel(
 	DATA_TYPE_OUT y_local = 0;
 	DATA_TYPE v;
 	u32 ci;
-	DATA_TYPE_OUT y_fifo[row_size] = 0;
+	//DATA_TYPE_OUT y_fifo[row_size] = 0;
 	
 	
 	//for (u32 i = 0; i < new_nnz; i+=1) {
@@ -750,7 +750,7 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 static int result_show(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 col)
 {
 	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < row) {
+		for (int j = 0; j < row; j++) {
 			std::cout 	<< "data index= " << j+i << " golden = " << y_golden[j*col+i]
 					<< ", kernel = " << y[j*col+i] << std::endl;
 		}
