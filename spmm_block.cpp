@@ -51,7 +51,10 @@ void spmm_kernel(
 
 	DATA_TYPE_OUT y_tmp = 0;
 	u32 row_counter = 0;
-
+	u32 index_counter = 0;
+	u32 y_row = 0;
+	
+	/*
 	hls::stream<DATA_TYPE> values_fifo;
 	#pragma HLS STREAM variable=values_fifo depth=12 type=fifo
 	//#pragma HLS STREAM variable=values_fifo
@@ -61,7 +64,7 @@ void spmm_kernel(
 	hls::stream<DATA_TYPE_OUT> y_fifo;
 	#pragma HLS STREAM variable=y_fifo depth=12 type=fifo
 	//#pragma HLS STREAM variable=y_fifo
-
+	
 	for (u32 i = 0; i < local_nnz; i+=1) {
 		#pragma HLS pipeline
 		values_fifo.write(values[i]);
@@ -73,6 +76,7 @@ void spmm_kernel(
 		//values_fifo << values[i];
 		col_indices_fifo.write(columnIndex[i]);
 	}
+	*/
 
 	u32 row_size_remains = 0;
 
@@ -93,8 +97,12 @@ void spmm_kernel(
 			if (row_size_remains > row_counter) {
 				y_local +=  0;
 			} else {
+				/*
 				DATA_TYPE v = values_fifo.read();
 				u32 ci = col_indices_fifo.read();
+				*/
+				v = values[index_counter];
+				ci = columnIndex[index_counter++];
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
@@ -139,15 +147,17 @@ void spmm_kernel(
 		//std::cout << "y_tmp  " << y_tmp << std::endl;
 
 		if (row_size_tmp == 0) {
-			y_fifo.write(y_tmp);
-
+			//y_fifo.write(y_tmp);
+			y[y_row] = y_tmp;
+			y_row += 1;
 		}
 	}
-
+	/*
 	for (u32 i = 0; i < local_row_size; i+=1) {
 		#pragma HLS pipeline
 		y[i] = y_fifo.read();
 	}
+	*/
 }
 
 void spmm(
