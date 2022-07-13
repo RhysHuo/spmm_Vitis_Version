@@ -439,8 +439,9 @@ void spmm(
 			u32 last_section = 0;
 			//std::cout << "check 07" << std::endl;
 			i = 0;
-			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			if(counter < 12){
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i0" << std::endl;
 			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
@@ -754,7 +755,7 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 			//return 1;
 		}
 	}
-    std::cout 	<< "TEST PASSED !" <<  std::endl;
+    //std::cout 	<< "TEST PASSED !" <<  std::endl;
 	return 0;
 }
 
