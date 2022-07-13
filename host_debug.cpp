@@ -169,7 +169,7 @@ void spmm_kernel(
 		} //p loop
 		//std::cout << "spmm_kernel : check 11" << std::endl;
 		
-		std::cout << "y_local  " << y_local << std::endl;
+		//std::cout << "y_local  " << y_local << std::endl;
 		y_tmp += y_local;
 		row_size_tmp -= II;
 		//std::cout << "y_local  " << y_local << std::endl;
@@ -427,8 +427,9 @@ void spmm(
 			i = 0;
 			//std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "entering spmm_kernel_i0" << std::endl;
-			std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
+			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
+			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -451,8 +452,9 @@ void spmm(
 			i = 1;
 			//std::cout << "check 08" << std::endl;
 			std::cout << "entering spmm_kernel_i1" << std::endl;
-			std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
+			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
+			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -475,8 +477,9 @@ void spmm(
 			i = 2;
 			//std::cout << "check 09" << std::endl;
 			std::cout << "entering spmm_kernel_i2" << std::endl;
-			std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
+			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
+			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
@@ -500,8 +503,9 @@ void spmm(
 			last_section = 1;
 			//std::cout << "check 10" << std::endl;
 			std::cout << "entering spmm_kernel_i3" << std::endl;
-			std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
+			//std::cout << "first_rowPrt_value  =  " << first_rowPrt_value << std::endl;
 			std::cout << "values_offset_threads[i]  =  " << values_offset_threads[i] << std::endl;
+			std::cout << "row_offset_threads[i]  =  " << row_offset_threads[i] << std::endl;
 			spmm_kernel(
 					ternary,
 					rowSizeNew_local_rs[i],
