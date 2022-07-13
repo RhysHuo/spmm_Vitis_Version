@@ -12,6 +12,8 @@
 //#include <hls_stream.h>
 #include "spmm_block.h"
 
+int counter = 0;
+
 //因为不能用hls_stream，所以数据计算不准确（不正确），成功版本请参考 host.cpp
 
 #define OCL_CHECK(error, call)                                                                   \
@@ -184,8 +186,9 @@ void spmm_kernel(
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
 			y[y_row] = y_tmp;
-			std::cout << "y[y_row]  " << y_row << " " << y[y_row] << std::endl;
+			std::cout << "y[y_row]  " << y_row << " " << counter << " " << y[y_row] << std::endl;
 			y_row += 1;
+			counter += 1;
 		}
 		
 	}
