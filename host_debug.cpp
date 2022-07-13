@@ -46,6 +46,7 @@ void spmm_kernel(
 	DATA_TYPE_OUT y_local = 0;
 	DATA_TYPE v;
 	u32 ci;
+	DATA_TYPE_OUT y_fifo[row_size] = 0;
 	
 	
 	//for (u32 i = 0; i < new_nnz; i+=1) {
@@ -55,9 +56,11 @@ void spmm_kernel(
 	//}
 	//std::cout << "rowSize_local_rs  " << *rowSize_local_rs << std::endl;
 	//std::cout << "rowSize_local_nrs  " << *rowSize_local_nrs << std::endl;
+	if(counter < 12){
 	std::cout << "row_size  " << row_size << std::endl;
 	std::cout << "nnz  " << nnz << std::endl;
 	std::cout << "new_nnz  " << new_nnz << std::endl;
+	}
 	
 	/*
 	hls::stream<DATA_TYPE>       values_fifo;
@@ -97,6 +100,7 @@ void spmm_kernel(
 		#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
+			if(counter < 12)
 			std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
 			row_size_remains = 0;
 			y_tmp = 0;
@@ -124,7 +128,10 @@ void spmm_kernel(
 					//std::cout << "spmm_kernel : check 04" << std::endl;
 					ci = columnIndex[i];
 				}
-					//std::cout << "ci  =   " << i << " " << ci << std::endl;
+					if(counter < 12){
+					std::cout << "v  =   " << i << " " << v << std::endl;
+					std::cout << "ci  =   " << i << " " << ci << std::endl;
+					}
 					//std::cout << "spmm_kernel : check 05" << std::endl;
 					//y_local +=  v*x_local[ci];
 					 if(ternary == 0)
@@ -174,9 +181,11 @@ void spmm_kernel(
 		//std::cout << "y_local  " << y_local << std::endl;
 		y_tmp += y_local;
 		row_size_tmp -= II;
-		//std::cout << "y_local  " << y_local << std::endl;
-		//std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
-		//std::cout << "y_tmp  " << y_tmp << std::endl;
+		if(counter < 12){
+		std::cout << "y_local  " << y_local << std::endl;
+		std::cout << "row_size_tmp  " << row_size_tmp << std::endl;
+		std::cout << "y_tmp  " << y_tmp << std::endl;
+		}
 		/*
 		if (row_size_tmp == 0) {
 			y_fifo << y_tmp;
@@ -186,6 +195,7 @@ void spmm_kernel(
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
 			y[y_row] = y_tmp;
+			if(counter < 12)
 			std::cout << "y[y_row]  " << y_row << " " << counter << " " << y[y_row] << std::endl;
 			y_row += 1;
 			counter += 1;
@@ -199,6 +209,7 @@ void spmm_kernel(
 		std::cout << "y[i]  " << i << " " << y[i] << std::endl;
 	}
 	*/
+	
 }
 
 void spmm(
@@ -736,6 +747,16 @@ static int result_check(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 
 	return 0;
 }
 
+static int result_show(DATA_TYPE_OUT *y, DATA_TYPE_OUT *y_golden, u32 row, u32 col)
+{
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < row) {
+			std::cout 	<< "data index= " << j+i << " golden = " << y_golden[j*col+i]
+					<< ", kernel = " << y[j*col+i] << std::endl;
+		}
+	}
+}
+
 //MAIN
 int main(int argc, char** argv) {
 
@@ -1052,6 +1073,8 @@ int main(int argc, char** argv) {
 
     if(result_check(array_y, array_y_golden, row_size, no_vectors))
         return 1;
+	//
+	result_show(array_y, array_y_golden, row_size, no_vectors);
 
 	OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_values, array_values));
     OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_array_colIndices, array_colIndices));
