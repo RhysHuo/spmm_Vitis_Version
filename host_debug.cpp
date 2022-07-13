@@ -123,14 +123,14 @@ void spmm_kernel(
 					ci++;
 				}
 				else{
-					v = values[p];
+					v = values[i+p];
 					//std::cout << "v  =   " << i << " " << v << std::endl;
 					//std::cout << "spmm_kernel : check 04" << std::endl;
-					ci = columnIndex[p];
+					ci = columnIndex[i+p];
 				}
 				if((counter < 12)){
-				std::cout << "v  =   " << p << " " << v << std::endl;
-				std::cout << "ci  =   " << p << " " << ci << std::endl;
+				std::cout << "v  =   " << i+p << " " << v << std::endl;
+				std::cout << "ci  =   " << i+p << " " << ci << std::endl;
 				}
 				//std::cout << "spmm_kernel : check 05" << std::endl;
 				//y_local +=  v*x_local[ci];
