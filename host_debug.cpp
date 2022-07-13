@@ -89,6 +89,7 @@ void spmm_kernel(
 	
 	//std::cout << "new_nnz = " << new_nnz << std::endl;
 	u32 local_nnz = 0;
+	u32 index_counter = 0;
 	/*
 	if(last_section)
 		local_nnz = nnz;
@@ -126,10 +127,10 @@ void spmm_kernel(
 					ci++;
 				}
 				else{
-					v = values[i+p];
+					v = values[index_counter];
 					//std::cout << "v  =   " << i << " " << v << std::endl;
 					//std::cout << "spmm_kernel : check 04" << std::endl;
-					ci = columnIndex[i+p];
+					ci = columnIndex[index_counter++];
 				}
 				if((counter < 12)){
 				std::cout << "v  =   " << i+p << " " << v << std::endl;
