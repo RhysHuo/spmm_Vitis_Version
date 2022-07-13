@@ -195,8 +195,11 @@ void spmm_kernel(
 		if (row_size_tmp == 0) {
 			//y_fifo[i] = y_tmp;
 			y[y_row] = y_tmp;
-			if(counter < 12)
+			if(counter < 12){
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
 			std::cout << "y[y_row]  " << y_row << " " << counter << " " << y[y_row] << std::endl;
+			std::cout << "///////////////////////////////////////////////////////////" << std::endl;
+			}
 			y_row += 1;
 			counter += 1;
 		}
