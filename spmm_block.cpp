@@ -101,8 +101,8 @@ void spmm_kernel(
 				DATA_TYPE v = values_fifo.read();
 				u32 ci = col_indices_fifo.read();
 				*/
-				v = values[index_counter];
-				ci = columnIndex[index_counter++];
+				DATA_TYPE v = values[index_counter];
+				u32 ci = columnIndex[index_counter++];
 				//y_local +=  v*x_local[ci];
 				 if(ternary == 0)
 				 {
