@@ -369,10 +369,10 @@ int main(int argc, char** argv) {
 
 				//*(array_colIndices + line_number) = c;
 				array_colIndices[line_number] = c;
-				std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
+				//std::cout << "array_colIndices = " << array_colIndices[line_number] << std::endl;
 				//*(array_values + line_number) = v;
 				array_values[line_number] = v;
-				std::cout << "array_values = " << array_values[line_number] << std::endl;
+				//std::cout << "array_values = " << array_values[line_number] << std::endl;
 				//std::cout << "(if) Pass 'something could go wrong' stage" << std::endl;
 
 			}
@@ -383,7 +383,7 @@ int main(int argc, char** argv) {
 				//std::cout << "rowptr " << c << std::endl;
 				//*(array_rowPtr + (line_number - (nnz))) = r;
 				array_rowPtr[line_number - nnz] = r;
-				std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
+				//std::cout << "array_rowPtr = " << array_rowPtr[line_number - nnz] << std::endl;
 				//std::cout << "(else) Pass 'something could go wrong' stage" << std::endl;
 			}
 			line_number++;
