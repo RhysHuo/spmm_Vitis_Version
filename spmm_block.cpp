@@ -81,7 +81,7 @@ void spmm_kernel(
 	u32 row_size_remains = 0;
 
 	for (u32 i = 0; i < local_new_nnz; i+=II) {
-		#pragma HLS pipeline
+		//#pragma HLS pipeline
 		if (row_size_tmp == 0) {
 			row_size_tmp = rowSize_local_nrs[j];
 			row_size_remains = 0;
@@ -92,7 +92,8 @@ void spmm_kernel(
 		DATA_TYPE_OUT y_local = 0;
 
 		for (u32 p = 0; p < II; p++) {
-			#pragma HLS UNROLL
+			//#pragma HLS UNROLL
+			#pragma HLS pipeline
 			//#pragma HLS pipeline //+
 			row_size_remains++;
 			if (row_size_remains > row_counter) {
