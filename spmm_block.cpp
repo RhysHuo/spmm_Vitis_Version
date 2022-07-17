@@ -42,7 +42,7 @@ void spmm_kernel(
 		u32 new_nnz
 ) {
 
-	#pragma HLS DATAFLOW
+	//#pragma HLS DATAFLOW
 	u32 row_size_tmp=0;
 	u32 j = 0;
 	u32 local_new_nnz = new_nnz;
@@ -92,6 +92,7 @@ void spmm_kernel(
 		DATA_TYPE_OUT y_local = 0;
 
 		for (u32 p = 0; p < II; p++) {
+			#pragma HLS UNROLL
 			//#pragma HLS pipeline //+
 			row_size_remains++;
 			if (row_size_remains > row_counter) {
@@ -107,6 +108,7 @@ void spmm_kernel(
 				 if(ternary == 0)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=8) {
+							#pragma HLS UNROLL
 							//#pragma HLS pipeline //+
 							ap_int<8> v_val = v.range(z+7,z);
 							ap_int<8> x_temp = x_local[ci].range(z+7,z);
@@ -120,6 +122,7 @@ void spmm_kernel(
 				 else if (ternary == 1)
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=2) {
+							#pragma HLS UNROLL
 							//#pragma HLS pipeline //+
 							ap_int<2> v_val = v.range(z+1,z);
 							ap_int<2> x_temp = x_local[ci].range(z+1,z);
@@ -131,6 +134,7 @@ void spmm_kernel(
 				 else
 				 {
 					for(int z = 0; z < DTYPE_LENGTH; z+=4) {
+							#pragma HLS UNROLL
 							//#pragma HLS pipeline //+
 							ap_int<4> v_val = v.range(z+3,z);
 							ap_int<4> x_temp = x_local[ci].range(z+3,z);
@@ -359,65 +363,66 @@ void spmm(
 
 
 //=======================================================================================
-
-			u32 i;
+			
+			//u32 i;
 			//for (int i = 0; i < NO_HW_THREAD; i++) {
-			i = 0;
+			//i = 0;
 				//#pragma HLS pipeline
+			#pragma HLS DATAFLOW
 			spmm_kernel(
 					ternary,
-					rowSizeNew_local_rs[i],
-					rowSizeNew_local_nrs[i],
-					columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
-					values_0 + first_rowPrt_value + values_offset_threads[i],
-					y_0 + begin + nv*row_size + row_offset_threads[i],
-					x_local[i],
-					row_size_threads[i],
-					nnz_threads[i],
-					new_nnz_threads[i]
+					rowSizeNew_local_rs[0],
+					rowSizeNew_local_nrs[0],
+					columnIndex_0 + first_rowPrt_value + values_offset_threads[0],
+					values_0 + first_rowPrt_value + values_offset_threads[0],
+					y_0 + begin + nv*row_size + row_offset_threads[0],
+					x_local[0],
+					row_size_threads[0],
+					nnz_threads[0],
+					new_nnz_threads[0]
 			);
 			//}
 			
-			i = 1;
+			//i = 1;
 			spmm_kernel(
 					ternary,
-					rowSizeNew_local_rs[i],
-					rowSizeNew_local_nrs[i],
-					columnIndex_1 + first_rowPrt_value + values_offset_threads[i],
-					values_1 + first_rowPrt_value + values_offset_threads[i],
-					y_1 + begin + nv*row_size + row_offset_threads[i],
-					x_local[i],
-					row_size_threads[i],
-					nnz_threads[i],
-					new_nnz_threads[i]
+					rowSizeNew_local_rs[1],
+					rowSizeNew_local_nrs[1],
+					columnIndex_1 + first_rowPrt_value + values_offset_threads[1],
+					values_1 + first_rowPrt_value + values_offset_threads[1],
+					y_1 + begin + nv*row_size + row_offset_threads[1],
+					x_local[1],
+					row_size_threads[1],
+					nnz_threads[1],
+					new_nnz_threads[1]
 			);
 
-			i = 2;
+			//i = 2;
 			spmm_kernel(
 					ternary,
-					rowSizeNew_local_rs[i],
-					rowSizeNew_local_nrs[i],
-					columnIndex_2 + first_rowPrt_value + values_offset_threads[i],
-					values_2 + first_rowPrt_value + values_offset_threads[i],
-					y_2 + begin + nv*row_size + row_offset_threads[i],
-					x_local[i],
-					row_size_threads[i],
-					nnz_threads[i],
-					new_nnz_threads[i]
+					rowSizeNew_local_rs[2],
+					rowSizeNew_local_nrs[2],
+					columnIndex_2 + first_rowPrt_value + values_offset_threads[2],
+					values_2 + first_rowPrt_value + values_offset_threads[2],
+					y_2 + begin + nv*row_size + row_offset_threads[2],
+					x_local[2],
+					row_size_threads[2],
+					nnz_threads[2],
+					new_nnz_threads[2]
 			);
 
-			i = 3;
+			//i = 3;
 			spmm_kernel(
 					ternary,
-					rowSizeNew_local_rs[i],
-					rowSizeNew_local_nrs[i],
-					columnIndex_3 + first_rowPrt_value + values_offset_threads[i],
-					values_3 + first_rowPrt_value + values_offset_threads[i],
-					y_3 + begin + nv*row_size + row_offset_threads[i],
-					x_local[i],
-					row_size_threads[i],
-					nnz_threads[i],
-					new_nnz_threads[i]
+					rowSizeNew_local_rs[3],
+					rowSizeNew_local_nrs[3],
+					columnIndex_3 + first_rowPrt_value + values_offset_threads[3],
+					values_3 + first_rowPrt_value + values_offset_threads[3],
+					y_3 + begin + nv*row_size + row_offset_threads[3],
+					x_local[3],
+					row_size_threads[3],
+					nnz_threads[3],
+					new_nnz_threads[3]
 			);
 			
 		}
