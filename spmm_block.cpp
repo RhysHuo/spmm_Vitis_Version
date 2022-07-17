@@ -365,24 +365,24 @@ void spmm(
 //=======================================================================================
 			
 			//u32 i;
-			//for (int i = 0; i < NO_HW_THREAD; i++) {
+			for (int i = 0; i < NO_HW_THREAD; i++) {
 			//i = 0;
-				//#pragma HLS pipeline
-			#pragma HLS DATAFLOW
-			spmm_kernel(
-					ternary,
-					rowSizeNew_local_rs[0],
-					rowSizeNew_local_nrs[0],
-					columnIndex_0 + first_rowPrt_value + values_offset_threads[0],
-					values_0 + first_rowPrt_value + values_offset_threads[0],
-					y_0 + begin + nv*row_size + row_offset_threads[0],
-					x_local[0],
-					row_size_threads[0],
-					nnz_threads[0],
-					new_nnz_threads[0]
-			);
-			//}
-			
+				#pragma HLS pipeline
+			//#pragma HLS DATAFLOW
+				spmm_kernel(
+						ternary,
+						rowSizeNew_local_rs[i],
+						rowSizeNew_local_nrs[i],
+						columnIndex_0 + first_rowPrt_value + values_offset_threads[i],
+						values_0 + first_rowPrt_value + values_offset_threads[i],
+						y_0 + begin + nv*row_size + row_offset_threads[i],
+						x_local[i],
+						row_size_threads[i],
+						nnz_threads[i],
+						new_nnz_threads[i]
+				);
+			}
+			/*
 			//i = 1;
 			spmm_kernel(
 					ternary,
@@ -424,6 +424,7 @@ void spmm(
 					nnz_threads[3],
 					new_nnz_threads[3]
 			);
+			*/
 			
 		}
 }
