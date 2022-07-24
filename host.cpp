@@ -23,7 +23,7 @@
 
 u32 golden_spmm_ternary(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X * x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
 
-    std::cout << "gold_spmm_ternary: check point 1" << std::endl;
+    //std::cout << "gold_spmm_ternary: check point 1" << std::endl;
 	u32 nvc = 0, i = 0, j = 0, rowStart = 0, rowEnd = row_size;
 
 	DATA_TYPE_OUT y0 = 0;
@@ -72,7 +72,7 @@ u32 golden_spmm_ternary(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA
 
 u32 golden_spmm_byte(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X * x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
 
-    std::cout << "golden_spmm_byte: check point 2" << std::endl;
+    //std::cout << "golden_spmm_byte: check point 2" << std::endl;
 	u32 nvc = 0, i = 0, j = 0, rowStart = 0, rowEnd = row_size;
 
 	DATA_TYPE_OUT y0 = 0;
@@ -104,7 +104,7 @@ u32 golden_spmm_byte(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TY
 
 u32 golden_spmm_quad(DATA_TYPE * values, u32 *row_ptr, u32* col_indices, DATA_TYPE_X * x, u32 no_vectors, DATA_TYPE_OUT *y, u32 row_size, u32 col_size) {
 
-    std::cout << "golden_spmm_quad: check point 3" << std::endl;
+    //std::cout << "golden_spmm_quad: check point 3" << std::endl;
 	u32 nvc = 0, i = 0, j = 0, rowStart = 0, rowEnd = row_size;
 
 	DATA_TYPE_OUT y0 = 0;
@@ -397,11 +397,11 @@ int main(int argc, char** argv) {
     // Date will be migrate to the kernal space
 	auto fpga_begin = std::chrono::high_resolution_clock::now();
     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_array_values, buffer_array_colIndices, buffer_array_rowPtr, buffer_array_x}, 0));
-	std::cout << "enqueueMigrateMemObjects_0 completed." << std::endl;
+	//std::cout << "enqueueMigrateMemObjects_0 completed." << std::endl;
     
     // Lauch the kernal
     OCL_CHECK(err, err = q.enqueueTask(krnl));
-	std::cout << "enqueueTask completed." << std::endl;
+	//std::cout << "enqueueTask completed." << std::endl;
     
     // To view the results, this call will transfer the data from FPGA to the host
 
@@ -411,7 +411,7 @@ int main(int argc, char** argv) {
 	// migrating the buffer back to the host for us. This is a coding style choice you must make.
 
     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_array_y}, CL_MIGRATE_MEM_OBJECT_HOST));
-	std::cout << "enqueueMigrateMemObjects_CL_MIGRATE_MEM_OBJECT_HOST completed." << std::endl;
+	//std::cout << "enqueueMigrateMemObjects_CL_MIGRATE_MEM_OBJECT_HOST completed." << std::endl;
     
     q.finish();
 	auto fpga_end = std::chrono::high_resolution_clock::now();
